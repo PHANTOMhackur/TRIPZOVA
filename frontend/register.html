@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | TRIPZOVA</title>
+
+    <link rel="stylesheet" href="register.css">
+</head>
+
+<body>
+
+    <main class="register-page">
+
+        <section class="register-card">
+
+            <!-- Left Visual Panel -->
+            <div class="register-visual">
+                <div class="visual-overlay"></div>
+            </div>
+
+            <!-- Right Form -->
+            <div class="register-form-section">
+
+                <a href="user/index.html" class="back-button" aria-label="Go back">
+                    ←
+                </a>
+
+                <div class="form-content">
+
+                    <h1>Create an Account</h1>
+
+                    <p class="login-text">
+                        Already have an account?
+                        <a href="login.html">Log in</a>
+                    </p>
+
+                    <form id="registerForm">
+
+                        <!-- First + Last Name -->
+                        <div class="name-row">
+
+                            <div class="input-group">
+                                <label for="firstName">First Name</label>
+
+                                <input
+                                    type="text"
+                                    id="firstName"
+                                    name="firstName"
+                                    required
+                                >
+                            </div>
+
+                            <div class="input-group">
+                                <label for="lastName">Last Name</label>
+
+                                <input
+                                    type="text"
+                                    id="lastName"
+                                    name="lastName"
+                                    required
+                                >
+                            </div>
+
+                        </div>
+
+                        <!-- Email -->
+                        <div class="input-group">
+                            <label for="email">Email</label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                required
+                            >
+                        </div>
+
+                        <!-- Password -->
+                        <div class="input-group">
+
+                            <label for="password">Password</label>
+
+                            <div class="password-wrapper">
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    id="togglePassword"
+                                    class="password-toggle"
+                                    aria-label="Show password"
+                                >
+                                    ◉
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Create Account -->
+                        <button
+                            type="submit"
+                            class="create-account-btn"
+                        >
+                            Create account
+                        </button>
+
+                        <!-- Terms -->
+                        <label class="terms">
+
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                required
+                            >
+
+                            <span>
+                                I agree to the
+                                <a href="#">Terms &amp; Condition</a>
+                            </span>
+
+                        </label>
+
+                    </form>
+
+                    <!-- Message -->
+                    <div id="message"></div>
+
+                    <!-- Divider -->
+                    <div class="divider">
+                        <span></span>
+                        <p>OR</p>
+                        <span></span>
+                    </div>
+
+                    <!-- Alternative Signup -->
+                    <div class="alternative-actions">
+
+                        <button
+                            type="button"
+                            class="outline-btn"
+                            id="googleSignup"
+                        >
+                            <span class="google-icon">G</span>
+                            Continue with Google
+                        </button>
+
+                        <button
+                            type="button"
+                            class="outline-btn"
+                            id="partnerSignup"
+                        >
+                            <span>▣</span>
+                            Register as partner
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="register.js"></script>
+
+</body>
+
+</html>

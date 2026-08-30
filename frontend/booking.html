@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Book Your Ride | TRIPZOVA</title>
+
+    <link rel="stylesheet" href="booking.css">
+</head>
+
+<body>
+
+    <main class="booking-page">
+
+        <div class="booking-container">
+
+            <!-- Back -->
+            <a
+                href="/user/"
+                class="back-button"
+            >
+                ← Back to TRIPZOVA
+            </a>
+
+
+            <!-- Header -->
+            <div class="booking-header">
+
+                <p class="booking-eyebrow">
+                    TRIPZOVA
+                </p>
+
+                <h1>
+                    Book your ride
+                </h1>
+
+                <p>
+                    Plan your journey with a trusted TRIPZOVA partner.
+                </p>
+
+            </div>
+
+
+            <!-- Trip Type -->
+
+            <div class="trip-toggle">
+
+                <button
+                    type="button"
+                    class="trip-option active"
+                    id="roundTripBtn"
+                >
+                    Round-Trip / Stay
+                </button>
+
+                <button
+                    type="button"
+                    class="trip-option"
+                    id="oneWayBtn"
+                >
+                    One-Way Drop
+                </button>
+
+            </div>
+
+
+<!-- Locations -->
+
+<div class="booking-grid">
+
+    <div class="booking-field">
+
+        <label for="pickupInput">
+            Pickup From
+        </label>
+
+        <div class="booking-input">
+
+            <span>📍</span>
+
+            <input
+                type="text"
+                id="pickupInput"
+                placeholder="Enter pickup location"
+                autocomplete="off"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div class="booking-field">
+
+        <label for="dropInput">
+            Drop To
+        </label>
+
+        <div class="booking-input">
+
+            <span>📍</span>
+
+            <input
+                type="text"
+                id="dropInput"
+                placeholder="Enter drop location"
+                autocomplete="off"
+            >
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- MAP -->
+
+<div class="booking-map-section">
+
+    <div
+        id="map"
+        class="booking-map"
+    ></div>
+
+    <div
+        id="routeInfo"
+        class="route-info"
+    >
+        <strong id="routeDistance">—</strong>
+        <span id="routeTime">—</span>
+    </div>
+
+</div>
+
+<div id="mapPicker" class="map-picker">
+
+    <div class="map-picker-pin">
+        📍
+    </div>
+
+    <div class="map-picker-top">
+        <button
+            type="button"
+            id="closeMapPicker"
+            class="map-picker-close"
+        >
+            ✕
+        </button>
+
+        <div>
+            <strong>Select location</strong>
+            <small>Move the map to place the pin</small>
+        </div>
+    </div>
+
+    <div
+        id="mapPickerAddress"
+        class="map-picker-address"
+    >
+        Move the map to select a location
+    </div>
+
+    <button
+        type="button"
+        id="confirmMapLocation"
+        class="confirm-map-location"
+    >
+        CONFIRM LOCATION
+    </button>
+
+</div>
+            <!-- Flight -->
+
+            <div class="flight-info">
+
+                <div class="flight-title">
+                    ✈️ Flight Number
+                    <span>(Recommended)</span>
+                </div>
+
+                <p>
+                    Provide your flight number so your host can
+                    track delays and ensure a smooth pickup.
+                    <strong>(Optional)</strong>
+                </p>
+
+                <input
+                    type="text"
+                    id="flightNumber"
+                    placeholder="Enter flight number"
+                >
+
+            </div>
+
+
+            <!-- Dates -->
+
+            <div class="booking-grid">
+
+                <div class="booking-field">
+
+                    <label for="journeyDate">
+                        Journey Date
+                    </label>
+
+                    <div class="booking-input">
+
+                        <span>📅</span>
+
+                        <input
+                            type="date"
+                            id="journeyDate"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="booking-field"
+                    id="returnDateField"
+                >
+
+                    <label for="returnDate">
+                        Return Date
+                    </label>
+
+                    <div class="booking-input">
+
+                        <span>📅</span>
+
+                        <input
+                            type="date"
+                            id="returnDate"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Pickup Time -->
+
+            <div class="booking-field pickup-time-field">
+
+                <label for="pickupTime">
+                    Pickup Time
+                </label>
+
+                <div class="booking-input">
+
+                    <span>🕐</span>
+
+                    <input
+                        type="time"
+                        id="pickupTime"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Passengers -->
+
+            <div class="passenger-field">
+
+                <label>
+                    Passengers
+                </label>
+
+                <button
+                    type="button"
+                    id="passengerButton"
+                    class="passenger-button"
+                >
+
+                    <span id="passengerText">
+                        1 Adult, 0 Kids
+                    </span>
+
+                    <span>
+                        ⌄
+                    </span>
+
+                </button>
+
+
+                <div
+                    class="passenger-menu"
+                    id="passengerMenu"
+                >
+
+                    <div class="passenger-row">
+
+                        <div>
+
+                            <strong>
+                                Adults
+                            </strong>
+
+                            <small>
+                                13+ years
+                            </small>
+
+                        </div>
+
+                        <div class="counter">
+
+                            <button
+                                type="button"
+                                id="adultMinus"
+                            >
+                                −
+                            </button>
+
+                            <span id="adultCount">
+                                1
+                            </span>
+
+                            <button
+                                type="button"
+                                id="adultPlus"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="passenger-row">
+
+                        <div>
+
+                            <strong>
+                                Kids
+                            </strong>
+
+                            <small>
+                                2–12 years
+                            </small>
+
+                        </div>
+
+                        <div class="counter">
+
+                            <button
+                                type="button"
+                                id="kidMinus"
+                            >
+                                −
+                            </button>
+
+                            <span id="kidCount">
+                                0
+                            </span>
+
+                            <button
+                                type="button"
+                                id="kidPlus"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Book -->
+
+            <button
+                type="button"
+                class="book-ride-button"
+                id="bookRideButton"
+            >
+                BOOK THE RIDE
+            </button>
+
+
+            <div
+                id="bookingMessage"
+                class="booking-message"
+            ></div>
+
+        </div>
+
+    </main>
+
+
+    <script src="booking.js"></script>
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAF_XQ_ftqkKqDTLE_lXHgwxIzNLjccFEs&libraries=places&callback=initBookingMap"
+    async
+    defer>
+</script>
+
+</body>
+
+</html>

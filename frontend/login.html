@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | TRIPZOVA</title>
+
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+    <main class="login-page">
+
+        <section class="login-card">
+
+            <!-- Left Visual -->
+            <div class="login-visual">
+                <div class="visual-overlay"></div>
+            </div>
+
+            <!-- Right Login -->
+            <div class="login-form-section">
+
+                <a href="user/index.html" class="back-button" aria-label="Go back">
+                    ←
+                </a>
+
+                <div class="form-content">
+
+                    <h1>Welcome Back</h1>
+
+                    <p class="signup-text">
+                        Don't have an account?
+                        <a href="register.html">Create one</a>
+                    </p>
+
+                    <form id="loginForm">
+
+                        <!-- Email -->
+                        <div class="input-group">
+                            <label for="email">Email</label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                required
+                            >
+                        </div>
+
+                        <!-- Password -->
+                        <div class="input-group">
+
+                            <div class="password-label-row">
+                                <label for="password">Password</label>
+
+                                <a href="forgot-password.html">
+                                    Forgot password?
+                                </a>
+                            </div>
+
+                            <div class="password-wrapper">
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    id="togglePassword"
+                                    class="password-toggle"
+                                    aria-label="Show password"
+                                >
+                                    ◉
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Login -->
+                        <button
+                            type="submit"
+                            class="login-btn"
+                        >
+                            Log in
+                        </button>
+
+                    </form>
+
+                    <!-- Message -->
+                    <div id="message"></div>
+
+                    <!-- Divider -->
+                    <div class="divider">
+                        <span></span>
+                        <p>OR</p>
+                        <span></span>
+                    </div>
+
+                    <!-- Google -->
+                    <button
+                        type="button"
+                        class="outline-btn"
+                        id="googleLogin"
+                    >
+                        <span class="google-icon">G</span>
+                        Continue with Google
+                    </button>
+
+                    <!-- Partner -->
+                    <button
+                        type="button"
+                        class="outline-btn partner-btn"
+                        id="partnerLogin"
+                    >
+                        <span>▣</span>
+                        Login as Partner
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="login.js"></script>
+
+</body>
+
+</html>
