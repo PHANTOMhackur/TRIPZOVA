@@ -2,31 +2,54 @@ const dns = require("dns");
 
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
-const userRoutes = require("./routes/userRoutes");
 const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
-const connectDatabase = require("./config/database");
-const authRoutes = require("./routes/authRoutes");
-const passwordRoutes = require("./routes/passwordRoutes");
-const passport = require("./config/passport");
+
+/* =========================================
+   LOAD ENVIRONMENT VARIABLES FIRST
+========================================= */
 
 dotenv.config({
     path: path.join(__dirname, ".env")
 });
 
+
+/* =========================================
+   IMPORT ROUTES / DATABASE
+========================================= */
+
+const connectDatabase = require("./config/database");
+const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
+const passwordRoutes = require("./routes/passwordRoutes");
+const passport = require("./config/passport");
+
+
 const app = express();
 
 const PORT = process.env.PORT || 5000;
 
-// Connect MongoDB
+
+/* =========================================
+   CONNECT DATABASE
+========================================= */
+
 connectDatabase();
 
 
-// Middleware
+/* =========================================
+   MIDDLEWARE
+========================================= */
+
 app.use(express.json());
 
 app.use(passport.initialize());
+
+
+/* =========================================
+   API ROUTES
+========================================= */
 
 app.use("/api/auth", passwordRoutes);
 
@@ -34,15 +57,42 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/users", userRoutes);
 
-// Serve frontend
-app.use(express.static(path.join(__dirname, "../frontend")));
 
-// Home page
+/* =========================================
+   FRONTEND
+========================================= */
+
+app.use(
+    express.static(
+        path.join(__dirname, "../frontend")
+    )
+);
+
+
+/* =========================================
+   HOME PAGE
+========================================= */
+
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/index.html"));
+
+    res.sendFile(
+        path.join(
+            __dirname,
+            "../frontend/index.html"
+        )
+    );
+
 });
 
-// Start server
+
+/* =========================================
+   START SERVER
+========================================= */
+
 app.listen(PORT, () => {
-    console.log(`TRIPZOVA server running on http://localhost:${PORT}`);
+
+    console.log(
+        `TRIPZOVA server running on http://localhost:${PORT}`
+    );
+
 });

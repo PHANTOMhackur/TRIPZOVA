@@ -178,15 +178,9 @@ loginForm.addEventListener("submit", async (event) => {
 const googleLogin =
     document.getElementById("googleLogin");
 
-
 if (googleLogin) {
 
     googleLogin.addEventListener("click", () => {
-
-        /*
-         * Google authentication will be connected
-         * after the Google OAuth backend is configured.
-         */
 
         window.location.href =
             "/api/auth/google";
