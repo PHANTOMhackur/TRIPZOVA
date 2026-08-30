@@ -5,6 +5,9 @@ node_modules/
 .env
 .env.*
 !.env.example
+# Google / OAuth secrets
+*.pem
+*.key
 
 # Uploads
 uploads/

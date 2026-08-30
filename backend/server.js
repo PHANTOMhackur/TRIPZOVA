@@ -9,7 +9,7 @@ const dotenv = require("dotenv");
 const connectDatabase = require("./config/database");
 const authRoutes = require("./routes/authRoutes");
 const passwordRoutes = require("./routes/passwordRoutes");
-
+const passport = require("./config/passport");
 
 dotenv.config({
     path: path.join(__dirname, ".env")
@@ -25,6 +25,8 @@ connectDatabase();
 
 // Middleware
 app.use(express.json());
+
+app.use(passport.initialize());
 
 app.use("/api/auth", passwordRoutes);
 

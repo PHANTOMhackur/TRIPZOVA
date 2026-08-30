@@ -113,13 +113,47 @@ loginForm.addEventListener("submit", async (event) => {
 
         setTimeout(() => {
 
-            if (redirect) {
-                window.location.href = redirect;
-            } else {
-                window.location.href = "/user/";
-            }
+    /* =========================================
+       PARTNER
+    ========================================= */
 
-        }, 800);
+        if (data.user.role === "partner") {
+
+            window.location.href =
+                "/partner/";
+
+            return;
+        }
+
+
+        /* =========================================
+        ADMIN
+        ========================================= */
+
+        if (data.user.role === "admin") {
+
+            window.location.href =
+                "/admin/";
+
+            return;
+        }
+
+
+        /* =========================================
+        CUSTOMER / TRAVELLER
+        ========================================= */
+
+        if (redirect) {
+
+            window.location.href = redirect;
+
+        } else {
+
+            window.location.href =
+                "/user/";
+        }
+
+    }, 800);
 
 
     } catch (error) {
@@ -162,21 +196,21 @@ if (googleLogin) {
 }
 
 
-/* =========================================
-   PARTNER LOGIN
-========================================= */
+// /* =========================================
+//    PARTNER LOGIN
+// ========================================= */
 
-const partnerLogin =
-    document.getElementById("partnerLogin");
+// const partnerLogin =
+//     document.getElementById("partnerLogin");
 
 
-if (partnerLogin) {
+// if (partnerLogin) {
 
-    partnerLogin.addEventListener("click", () => {
+//     partnerLogin.addEventListener("click", () => {
 
-        window.location.href =
-            "partner-login.html";
+//         window.location.href =
+//             "partner-login.html";
 
-    });
+//     });
 
-}
+// }

@@ -26,6 +26,11 @@ const userSchema = new mongoose.Schema(
             trim: true
         },
 
+        googleId: {
+            type: String,
+            default: null
+        },
+
         phone: {
             type: String,
             trim: true
@@ -43,8 +48,17 @@ const userSchema = new mongoose.Schema(
 
         password: {
             type: String,
-            required: true
+            required: function () {
+                return this.authProvider === "local";
+            }
         },
+
+        authProvider: {
+            type: String,
+            enum: ["local", "google"],
+            default: "local"
+        },
+
 
 
         /* =========================================
@@ -107,6 +121,8 @@ const userSchema = new mongoose.Schema(
             type: Date,
             default: null
         }
+
+        
     },
 
     {

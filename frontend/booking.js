@@ -2325,3 +2325,12 @@ function showBookingMessage(
     );
 }
 
+/* =========================================
+   LOGIN PROTECTION
+========================================= */
+
+const token = localStorage.getItem("tripzovaToken");
+
+if (!token) {
+    window.location.href = "login.html";
+}
