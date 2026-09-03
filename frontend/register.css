@@ -691,3 +691,157 @@ body {
         min-height: 150px;
     }
 }
+
+/* =========================================
+   PHONE + OTP ROW
+========================================= */
+
+.phone-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+
+/* =========================================
+   PHONE / OTP INPUT
+========================================= */
+
+.phone-row input {
+    flex: 1;
+    min-width: 0;
+}
+
+
+/* =========================================
+   OTP BUTTON
+========================================= */
+
+.otp-btn {
+    flex-shrink: 0;
+    height: 52px;
+    padding: 0 20px;
+
+    border: none;
+    border-radius: 26px;
+
+    background: #000;
+    color: #fff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+/* Hover */
+
+.otp-btn:hover {
+    background: #222;
+    transform: translateY(-1px);
+}
+
+
+/* Click */
+
+.otp-btn:active {
+    transform: translateY(0);
+}
+
+
+/* Disabled */
+
+.otp-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* =========================================
+   FIELD HINT
+========================================= */
+
+.field-hint {
+    display: block;
+    margin-top: 8px;
+
+    color: #777;
+
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+
+/* =========================================
+   OTP STATUS
+========================================= */
+
+.otp-status {
+    margin-top: 8px;
+
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+
+/* OTP SUCCESS */
+
+.otp-status.success {
+    color: #16803c;
+}
+
+
+/* OTP ERROR */
+
+.otp-status.error {
+    color: #d00000;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .phone-row {
+        gap: 8px;
+    }
+
+    .otp-btn {
+        height: 50px;
+        padding: 0 15px;
+        font-size: 13px;
+    }
+
+}
+
+
+/* =========================================
+   VERY SMALL SCREENS
+========================================= */
+
+@media (max-width: 420px) {
+
+    .phone-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .otp-btn {
+        width: 100%;
+        height: 48px;
+        border-radius: 24px;
+    }
+
+}

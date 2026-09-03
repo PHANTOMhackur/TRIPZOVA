@@ -678,3 +678,223 @@ body {
         min-height: 150px;
     }
 }
+/* =========================================
+   MOBILE LOGIN TOGGLE
+========================================= */
+
+.phone-login-toggle {
+    display: block;
+
+    width: 100%;
+
+    margin-top: 16px;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: #162d45;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+.phone-login-toggle:hover {
+    text-decoration: underline;
+}
+
+
+
+/* =========================================
+   MOBILE LOGIN SECTION
+========================================= */
+
+.phone-login-section {
+    width: 100%;
+
+    margin-top: 18px;
+
+    padding-top: 4px;
+}
+
+
+
+/* =========================================
+   PHONE LOGIN TITLE
+========================================= */
+
+.otp-login-title {
+    margin-bottom: 14px;
+
+    color: #162d45;
+
+    font-size: 18px;
+
+    font-weight: 500;
+}
+
+
+
+/* =========================================
+   PHONE INPUT ROW
+========================================= */
+
+.phone-row {
+    display: flex;
+
+    align-items: stretch;
+
+    width: 100%;
+
+    gap: 10px;
+}
+
+
+.phone-row input {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+
+/* =========================================
+   OTP BUTTON
+========================================= */
+
+.otp-btn {
+    flex-shrink: 0;
+
+    min-width: 105px;
+
+    padding: 0 16px;
+
+    border: 1px solid #162d45;
+
+    border-radius: 25px;
+
+    background: #162d45;
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+.otp-btn:hover {
+    background: #23445f;
+
+    border-color: #23445f;
+}
+
+
+.otp-btn:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+
+/* =========================================
+   MSG91 CAPTCHA
+========================================= */
+
+.msg91-captcha {
+    margin: 12px 0;
+}
+
+
+/* =========================================
+   FIELD HINT
+========================================= */
+
+.field-hint {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #777;
+
+    font-size: 12px;
+
+    line-height: 1.4;
+}
+
+
+
+/* =========================================
+   OTP FIELD
+========================================= */
+
+#loginOtpGroup {
+    margin-top: 16px;
+}
+
+
+
+/* =========================================
+   OTP STATUS
+========================================= */
+
+.otp-status {
+    min-height: 18px;
+
+    margin-top: 7px;
+
+    font-size: 12px;
+
+    line-height: 1.4;
+}
+
+
+.otp-status.success {
+    color: #16803c;
+}
+
+
+.otp-status.error {
+    color: #d93025;
+}
+
+
+
+/* =========================================
+   MOBILE RESPONSIVE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .phone-row {
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+
+    .otp-btn {
+        width: 100%;
+
+        min-height: 44px;
+    }
+
+}

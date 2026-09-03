@@ -23,6 +23,7 @@ const connectDatabase = require("./config/database");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const passwordRoutes = require("./routes/passwordRoutes");
+const otpRoutes = require("./routes/otpRoutes");
 const passport = require("./config/passport");
 
 
@@ -52,6 +53,8 @@ app.use(passport.initialize());
 ========================================= */
 
 app.use("/api/auth", passwordRoutes);
+
+app.use("/api/auth/otp", otpRoutes);
 
 app.use("/api/auth", authRoutes);
 

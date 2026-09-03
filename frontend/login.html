@@ -2,65 +2,130 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Login | TRIPZOVA</title>
 
     <link rel="stylesheet" href="login.css">
+
 </head>
+
 
 <body>
 
+
     <main class="login-page">
+
 
         <section class="login-card">
 
-            <!-- Left Visual -->
+
+            <!-- =========================================
+                 LEFT VISUAL
+            ========================================== -->
+
             <div class="login-visual">
+
                 <div class="visual-overlay"></div>
+
             </div>
 
-            <!-- Right Login -->
+
+
+            <!-- =========================================
+                 RIGHT LOGIN
+            ========================================== -->
+
             <div class="login-form-section">
 
-                <a href="user/index.html" class="back-button" aria-label="Go back">
+
+                <!-- BACK BUTTON -->
+
+                <a
+                    href="user/index.html"
+                    class="back-button"
+                    aria-label="Go back"
+                >
                     ←
                 </a>
 
+
+
                 <div class="form-content">
 
-                    <h1>Welcome Back</h1>
+
+                    <!-- =========================================
+                         TITLE
+                    ========================================== -->
+
+                    <h1>
+                        Welcome Back
+                    </h1>
+
 
                     <p class="signup-text">
+
                         Don't have an account?
-                        <a href="register.html">Create one</a>
+
+                        <a href="register.html">
+                            Create one
+                        </a>
+
                     </p>
+
+
+
+                    <!-- =========================================
+                         EMAIL / PASSWORD LOGIN
+                    ========================================== -->
 
                     <form id="loginForm">
 
-                        <!-- Email -->
+
+                        <!-- EMAIL -->
+
                         <div class="input-group">
-                            <label for="email">Email</label>
+
+                            <label for="email">
+                                Email
+                            </label>
 
                             <input
                                 type="email"
                                 id="email"
                                 name="email"
+                                autocomplete="email"
                                 required
                             >
+
                         </div>
 
-                        <!-- Password -->
+
+
+                        <!-- PASSWORD -->
+
                         <div class="input-group">
 
+
                             <div class="password-label-row">
-                                <label for="password">Password</label>
+
+                                <label for="password">
+                                    Password
+                                </label>
+
 
                                 <a href="forgot-password.html">
                                     Forgot password?
                                 </a>
+
                             </div>
+
 
                             <div class="password-wrapper">
 
@@ -68,8 +133,10 @@
                                     type="password"
                                     id="password"
                                     name="password"
+                                    autocomplete="current-password"
                                     required
                                 >
+
 
                                 <button
                                     type="button"
@@ -82,9 +149,13 @@
 
                             </div>
 
+
                         </div>
 
-                        <!-- Login -->
+
+
+                        <!-- LOGIN BUTTON -->
+
                         <button
                             type="submit"
                             class="login-btn"
@@ -92,37 +163,205 @@
                             Log in
                         </button>
 
+
                     </form>
 
-                    <!-- Message -->
+
+
+                    <!-- MESSAGE -->
+
                     <div id="message"></div>
 
-                    <!-- Divider -->
-                    <div class="divider">
-                        <span></span>
-                        <p>OR</p>
-                        <span></span>
+
+
+                    <!-- =========================================
+                         PHONE LOGIN OPTION
+                    ========================================== -->
+
+                    <button
+                        type="button"
+                        id="phoneLoginToggle"
+                        class="phone-login-toggle"
+                    >
+                        Login with mobile number
+                    </button>
+
+
+
+                    <!-- =========================================
+                         PHONE OTP SECTION
+
+                         HIDDEN BY DEFAULT
+                    ========================================== -->
+
+                    <div
+                        id="phoneLoginSection"
+                        class="phone-login-section"
+                        style="display: none;"
+                    >
+
+
+                        <!-- PHONE NUMBER -->
+
+                        <div class="input-group">
+
+                            <label for="loginPhone">
+                                Mobile Number
+                            </label>
+
+
+                            <div class="phone-row">
+
+                                <input
+                                    type="tel"
+                                    id="loginPhone"
+                                    name="loginPhone"
+                                    placeholder="Enter 10-digit mobile number"
+                                    autocomplete="tel"
+                                    maxlength="13"
+                                >
+
+
+                                <button
+                                    type="button"
+                                    id="sendLoginOtpBtn"
+                                    class="otp-btn"
+                                >
+                                    Send OTP
+                                </button>
+
+                            </div>
+
+
+                            <small class="field-hint">
+                                We'll send a verification code to your phone.
+                            </small>
+
+
+                        </div>
+
+
+
+                        <!-- MSG91 CAPTCHA -->
+
+                        <div
+                            id="msg91-captcha"
+                            class="msg91-captcha"
+                        ></div>
+
+
+
+                        <!-- OTP -->
+
+                        <div
+                            class="input-group"
+                            id="loginOtpGroup"
+                            style="display: none;"
+                        >
+
+
+                            <label for="loginOtp">
+                                Verification Code
+                            </label>
+
+
+                            <div class="phone-row">
+
+                                <input
+                                    type="text"
+                                    id="loginOtp"
+                                    name="loginOtp"
+                                    placeholder="Enter OTP"
+                                    inputmode="numeric"
+                                    autocomplete="one-time-code"
+                                    maxlength="8"
+                                >
+
+
+                                <button
+                                    type="button"
+                                    id="verifyLoginOtpBtn"
+                                    class="otp-btn"
+                                >
+                                    Verify OTP
+                                </button>
+
+                            </div>
+
+
+                            <div
+                                id="loginOtpStatus"
+                                class="otp-status"
+                            ></div>
+
+
+                        </div>
+
+
                     </div>
 
-                    <!-- Google -->
+
+
+                    <!-- =========================================
+                         DIVIDER
+                    ========================================== -->
+
+                    <div class="divider">
+
+                        <span></span>
+
+                        <p>
+                            OR
+                        </p>
+
+                        <span></span>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         GOOGLE LOGIN
+                    ========================================== -->
+
                     <button
                         type="button"
                         class="outline-btn"
                         id="googleLogin"
                     >
-                        <span class="google-icon">G</span>
+
+                        <span class="google-icon">
+                            G
+                        </span>
+
                         Continue with Google
+
                     </button>
 
-                    <!-- Partner
+
+
+                    <!-- =========================================
+                         PARTNER LOGIN
+                    ========================================== -->
+
+                    <!--
+
                     <button
                         type="button"
                         class="outline-btn partner-btn"
                         id="partnerLogin"
                     >
-                        <span>▣</span>
+
+                        <span>
+                            ▣
+                        </span>
+
                         Login as Partner
-                    </button> -->
+
+                    </button>
+
+                    -->
+
 
                 </div>
 
@@ -132,7 +371,72 @@
 
     </main>
 
+
+
+    <!-- =========================================
+         MSG91 OTP WIDGET
+
+         ONLY ONE MSG91 SCRIPT
+    ========================================== -->
+
+    <script type="text/javascript">
+
+        var configuration = {
+
+            widgetId:
+                "366961697156373631343138",
+
+            tokenAuth:
+                "566514TVOX0ahSF6a9698f1P1",
+
+            identifier:
+                "",
+
+            exposeMethods:
+                true,
+
+            captchaRenderId:
+                "msg91-captcha",
+
+            success:
+                function (data) {
+
+                    console.log(
+                        "MSG91 success:",
+                        data
+                    );
+
+                },
+
+            failure:
+                function (error) {
+
+                    console.error(
+                        "MSG91 failure:",
+                        error
+                    );
+
+                }
+
+        };
+
+    </script>
+
+
+
+    <script
+        type="text/javascript"
+        src="https://verify.msg91.com/otp-provider.js"
+    ></script>
+
+
+
+    <!-- =========================================
+         LOGIN JAVASCRIPT
+    ========================================== -->
+
     <script src="login.js"></script>
+
 
 </body>
 

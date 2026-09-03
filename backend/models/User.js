@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 
+
 const userSchema = new mongoose.Schema(
     {
+
         /* =========================================
            BASIC USER INFORMATION
         ========================================= */
@@ -18,6 +20,11 @@ const userSchema = new mongoose.Schema(
             trim: true
         },
 
+
+        /* =========================================
+           EMAIL
+        ========================================= */
+
         email: {
             type: String,
             required: true,
@@ -26,15 +33,37 @@ const userSchema = new mongoose.Schema(
             trim: true
         },
 
+
+        /* =========================================
+           GOOGLE
+        ========================================= */
+
         googleId: {
             type: String,
             default: null
         },
 
+
+        /* =========================================
+           PHONE
+        ========================================= */
+
         phone: {
             type: String,
+            unique: true,
+            sparse: true,
             trim: true
         },
+
+        phoneVerified: {
+            type: Boolean,
+            default: false
+        },
+
+
+        /* =========================================
+           LOCATION
+        ========================================= */
 
         city: {
             type: String,
@@ -46,6 +75,11 @@ const userSchema = new mongoose.Schema(
             trim: true
         },
 
+
+        /* =========================================
+           PASSWORD
+        ========================================= */
+
         password: {
             type: String,
             required: function () {
@@ -53,12 +87,19 @@ const userSchema = new mongoose.Schema(
             }
         },
 
+
+        /* =========================================
+           AUTH PROVIDER
+        ========================================= */
+
         authProvider: {
             type: String,
-            enum: ["local", "google"],
+            enum: [
+                "local",
+                "google"
+            ],
             default: "local"
         },
-
 
 
         /* =========================================
@@ -122,7 +163,6 @@ const userSchema = new mongoose.Schema(
             default: null
         }
 
-        
     },
 
     {
@@ -130,4 +170,27 @@ const userSchema = new mongoose.Schema(
     }
 );
 
-module.exports = mongoose.model("User", userSchema);
+
+/* =========================================
+   INDEXES
+========================================= */
+
+
+/*
+ * Google ID
+ *
+ * Only Google users have a googleId.
+ */
+userSchema.index(
+    { googleId: 1 },
+    {
+        unique: true,
+        sparse: true
+    }
+);
+
+
+module.exports = mongoose.model(
+    "User",
+    userSchema
+);

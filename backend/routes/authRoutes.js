@@ -3,17 +3,43 @@ const express = require("express");
 const {
     loginUser,
     googleAuth,
-    googleCallback
+    googleCallback,
+    createGoogleAccount,
+    verifyPhoneOTP,
+    loginWithPhoneOTP
 } = require("../controllers/authController");
 
 const router = express.Router();
 
 
 /* =========================================
-   NORMAL LOGIN
+   EMAIL / PASSWORD LOGIN
 ========================================= */
 
-router.post("/login", loginUser);
+router.post(
+    "/login",
+    loginUser
+);
+
+
+/* =========================================
+   PHONE OTP LOGIN
+========================================= */
+
+router.post(
+    "/phone-login",
+    loginWithPhoneOTP
+);
+
+
+/* =========================================
+   PHONE OTP ACCESS TOKEN VERIFICATION
+========================================= */
+
+router.post(
+    "/otp/verify",
+    verifyPhoneOTP
+);
 
 
 /* =========================================
@@ -33,6 +59,16 @@ router.get(
 router.get(
     "/google/callback",
     googleCallback
+);
+
+
+/* =========================================
+   CREATE GOOGLE ACCOUNT
+========================================= */
+
+router.post(
+    "/google/create",
+    createGoogleAccount
 );
 
 
