@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TRIPZOVA Admin Dashboard</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+    <!-- MOBILE OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        <div class="sidebar-brand">
+            <a href="index.html">
+                <span class="brand-icon">
+                    <i class="bi bi-airplane-fill"></i>
+                </span>
+
+                <span class="brand-name">TRIPZOVA</span>
+            </a>
+
+            <button
+                type="button"
+                class="sidebar-close"
+                id="sidebarClose"
+            >
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="sidebar-content">
+
+            <div class="sidebar-section-title">
+                MAIN
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="index.html" class="sidebar-link active">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Dashboard</span>
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-section-title">
+                USERS & PARTNERS
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="users.html" class="sidebar-link">
+                    <i class="bi bi-people-fill"></i>
+                    <span>Users</span>
+                </a>
+
+                <a href="partners.html" class="sidebar-link">
+                    <i class="bi bi-person-badge-fill"></i>
+                    <span>Partners</span>
+                    <span class="sidebar-badge" id="pendingPartnerBadge">
+                        0
+                    </span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-person-walking"></i>
+                    <span>Travellers</span>
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-section-title">
+                TRIPZOVA SERVICES
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="tours.html" class="sidebar-link">
+                    <i class="bi bi-map-fill"></i>
+                    <span>Tours</span>
+                </a>
+
+                <a href="rides.html" class="sidebar-link">
+                    <i class="bi bi-car-front-fill"></i>
+                    <span>Rides</span>
+                </a>
+
+                <a href="bookings.html" class="sidebar-link">
+                    <i class="bi bi-calendar-check-fill"></i>
+                    <span>Bookings</span>
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-section-title">
+                FINANCE
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="payments.html" class="sidebar-link">
+                    <i class="bi bi-credit-card-fill"></i>
+                    <span>Payments</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-wallet2"></i>
+                    <span>Partner Earnings</span>
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-section-title">
+                MANAGEMENT
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="reports.html" class="sidebar-link">
+                    <i class="bi bi-bar-chart-fill"></i>
+                    <span>Reports</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-star-fill"></i>
+                    <span>Reviews</span>
+                </a>
+
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-bell-fill"></i>
+                    <span>Notifications</span>
+                </a>
+
+                <a href="settings.html" class="sidebar-link">
+                    <i class="bi bi-gear-fill"></i>
+                    <span>Settings</span>
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <!-- SIDEBAR FOOTER -->
+        <div class="sidebar-footer">
+
+            <button
+                type="button"
+                class="logout-button"
+                id="logoutButton"
+            >
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN WRAPPER -->
+    <main class="admin-main">
+
+        <!-- TOP NAVBAR -->
+        <header class="admin-navbar">
+
+            <div class="navbar-left">
+
+                <button
+                    type="button"
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                >
+                    <i class="bi bi-list"></i>
+                </button>
+
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Welcome back to TRIPZOVA Admin</p>
+                </div>
+
+            </div>
+
+
+            <div class="navbar-right">
+
+                <button
+                    type="button"
+                    class="navbar-icon-button"
+                    title="Notifications"
+                >
+                    <i class="bi bi-bell"></i>
+                    <span class="notification-dot"></span>
+                </button>
+
+
+                <div class="admin-profile">
+
+                    <div class="admin-avatar">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+
+                    <div class="admin-profile-info">
+                        <strong id="adminName">Admin</strong>
+                        <span>Administrator</span>
+                    </div>
+
+                    <i class="bi bi-chevron-down profile-arrow"></i>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE CONTENT -->
+        <div class="admin-content">
+
+            <!-- WELCOME -->
+            <section class="dashboard-welcome">
+
+                <div>
+                    <h2>Good morning, Admin 👋</h2>
+
+                    <p>
+                        Here's what's happening with TRIPZOVA today.
+                    </p>
+                </div>
+
+                <div class="dashboard-date">
+                    <i class="bi bi-calendar3"></i>
+                    <span id="currentDate">--</span>
+                </div>
+
+            </section>
+
+
+            <!-- STAT CARDS -->
+            <section class="stats-grid">
+
+                <!-- USERS -->
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+
+                        <div class="stat-icon users-icon">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+
+                        <span class="stat-change positive">
+                            <i class="bi bi-arrow-up"></i>
+                            <span id="usersChange">0%</span>
+                        </span>
+
+                    </div>
+
+                    <div class="stat-card-body">
+
+                        <span class="stat-label">
+                            Total Users
+                        </span>
+
+                        <strong class="stat-number" id="totalUsers">
+                            0
+                        </strong>
+
+                    </div>
+
+                    <a href="users.html" class="stat-card-link">
+                        View users
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                </div>
+
+
+                <!-- PARTNERS -->
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+
+                        <div class="stat-icon partners-icon">
+                            <i class="bi bi-person-badge-fill"></i>
+                        </div>
+
+                        <span class="stat-change positive">
+                            <i class="bi bi-arrow-up"></i>
+                            <span id="partnersChange">0%</span>
+                        </span>
+
+                    </div>
+
+                    <div class="stat-card-body">
+
+                        <span class="stat-label">
+                            Approved Partners
+                        </span>
+
+                        <strong class="stat-number" id="totalPartners">
+                            0
+                        </strong>
+
+                    </div>
+
+                    <a href="partners.html" class="stat-card-link">
+                        Manage partners
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                </div>
+
+
+                <!-- PENDING -->
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+
+                        <div class="stat-icon pending-icon">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+
+                        <span class="stat-change neutral">
+                            Review
+                        </span>
+
+                    </div>
+
+                    <div class="stat-card-body">
+
+                        <span class="stat-label">
+                            Pending Partners
+                        </span>
+
+                        <strong class="stat-number" id="pendingPartners">
+                            0
+                        </strong>
+
+                    </div>
+
+                    <a href="partners.html?status=pending" class="stat-card-link">
+                        Review requests
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                </div>
+
+
+                <!-- BOOKINGS -->
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+
+                        <div class="stat-icon bookings-icon">
+                            <i class="bi bi-calendar-check-fill"></i>
+                        </div>
+
+                        <span class="stat-change positive">
+                            <i class="bi bi-arrow-up"></i>
+                            <span id="bookingsChange">0%</span>
+                        </span>
+
+                    </div>
+
+                    <div class="stat-card-body">
+
+                        <span class="stat-label">
+                            Total Bookings
+                        </span>
+
+                        <strong class="stat-number" id="totalBookings">
+                            0
+                        </strong>
+
+                    </div>
+
+                    <a href="bookings.html" class="stat-card-link">
+                        View bookings
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- SECOND ROW -->
+            <section class="dashboard-grid">
+
+                <!-- REVENUE -->
+                <div class="dashboard-card revenue-card">
+
+                    <div class="dashboard-card-header">
+
+                        <div>
+                            <h3>Revenue Overview</h3>
+                            <p>TRIPZOVA platform revenue</p>
+                        </div>
+
+                        <select id="revenuePeriod">
+                            <option value="7">Last 7 days</option>
+                            <option value="30" selected>
+                                Last 30 days
+                            </option>
+                            <option value="90">
+                                Last 3 months
+                            </option>
+                            <option value="365">
+                                Last year
+                            </option>
+                        </select>
+
+                    </div>
+
+                    <div class="revenue-summary">
+
+                        <div>
+                            <span>Total Revenue</span>
+                            <strong id="totalRevenue">
+                                ₹0
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Today</span>
+                            <strong id="todayRevenue">
+                                ₹0
+                            </strong>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-placeholder" id="revenueChart">
+
+                        <div class="chart-empty">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Revenue chart will appear here</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- USER DISTRIBUTION -->
+                <div class="dashboard-card">
+
+                    <div class="dashboard-card-header">
+
+                        <div>
+                            <h3>User Distribution</h3>
+                            <p>Users by account type</p>
+                        </div>
+
+                        <button
+                            class="card-menu-button"
+                            type="button"
+                        >
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="user-distribution">
+
+                        <div class="distribution-circle">
+
+                            <div>
+                                <strong id="customerPercentage">
+                                    0%
+                                </strong>
+
+                                <span>Customers</span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="distribution-list">
+
+                            <div class="distribution-item">
+                                <span>
+                                    <i class="distribution-dot customer"></i>
+                                    Customers
+                                </span>
+
+                                <strong id="customerCount">
+                                    0
+                                </strong>
+                            </div>
+
+                            <div class="distribution-item">
+                                <span>
+                                    <i class="distribution-dot traveller"></i>
+                                    Travellers
+                                </span>
+
+                                <strong id="travellerCount">
+                                    0
+                                </strong>
+                            </div>
+
+                            <div class="distribution-item">
+                                <span>
+                                    <i class="distribution-dot partner"></i>
+                                    Partners
+                                </span>
+
+                                <strong id="partnerCount">
+                                    0
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- THIRD ROW -->
+            <section class="dashboard-grid dashboard-grid-bottom">
+
+                <!-- RECENT PARTNERS -->
+                <div class="dashboard-card recent-card">
+
+                    <div class="dashboard-card-header">
+
+                        <div>
+                            <h3>Recent Partner Requests</h3>
+                            <p>Latest applications waiting for review</p>
+                        </div>
+
+                        <a href="partners.html">
+                            View all
+                        </a>
+
+                    </div>
+
+
+                    <div class="table-responsive">
+
+                        <table class="admin-table">
+
+                            <thead>
+                                <tr>
+                                    <th>Partner</th>
+                                    <th>Phone</th>
+                                    <th>City</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="recentPartnersTable">
+
+                                <tr>
+                                    <td colspan="5">
+                                        <div class="table-loading">
+                                            <span class="spinner-border spinner-border-sm"></span>
+                                            Loading partner requests...
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUICK ACTIONS -->
+                <div class="dashboard-card quick-actions-card">
+
+                    <div class="dashboard-card-header">
+
+                        <div>
+                            <h3>Quick Actions</h3>
+                            <p>Common admin tasks</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="quick-actions">
+
+                        <a href="partners.html" class="quick-action">
+
+                            <div class="quick-action-icon">
+                                <i class="bi bi-person-check-fill"></i>
+                            </div>
+
+                            <div>
+                                <strong>Review Partners</strong>
+                                <span>Approve or reject applications</span>
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </a>
+
+
+                        <a href="users.html" class="quick-action">
+
+                            <div class="quick-action-icon">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+
+                            <div>
+                                <strong>Manage Users</strong>
+                                <span>View and manage accounts</span>
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </a>
+
+
+                        <a href="tours.html" class="quick-action">
+
+                            <div class="quick-action-icon">
+                                <i class="bi bi-map-fill"></i>
+                            </div>
+
+                            <div>
+                                <strong>Manage Tours</strong>
+                                <span>Add and manage tour listings</span>
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </a>
+
+
+                        <a href="reports.html" class="quick-action">
+
+                            <div class="quick-action-icon">
+                                <i class="bi bi-bar-chart-fill"></i>
+                            </div>
+
+                            <div>
+                                <strong>View Reports</strong>
+                                <span>Platform performance reports</span>
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- BOOTSTRAP -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <!-- ADMIN JS -->
+    <script src="js/admin.js"></script>
+    <script src="js/dashboard.js"></script>
+
+</body>
+</html>

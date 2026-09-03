@@ -20,11 +20,16 @@ dotenv.config({
 ========================================= */
 
 const connectDatabase = require("./config/database");
+const adminRoutes = require("./routes/adminRoutes");
 const userRoutes = require("./routes/userRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
 const authRoutes = require("./routes/authRoutes");
 const passwordRoutes = require("./routes/passwordRoutes");
 const otpRoutes = require("./routes/otpRoutes");
 const passport = require("./config/passport");
+const partnerRoutes = require("./routes/partnerRoutes");
+
+
 
 
 const app = express();
@@ -60,6 +65,11 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/users", userRoutes);
 
+app.use("/api/admin", adminRoutes);
+
+app.use("/api/bookings", bookingRoutes);
+
+app.use("/api/partners", partnerRoutes);
 
 /* =========================================
    FRONTEND

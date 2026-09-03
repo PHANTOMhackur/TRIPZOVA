@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Partner Dashboard | TRIPZOVA</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/partner.css"
+    >
+</head>
+
+<body>
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside
+        class="partner-sidebar"
+        id="partnerSidebar"
+    >
+
+        <a
+            href="index.html"
+            class="partner-brand"
+        >
+
+            <div class="partner-brand-logo">
+                T
+            </div>
+
+            <div>
+                <div class="partner-brand-name">
+                    TRIPZOVA
+                </div>
+
+                <span class="partner-brand-subtitle">
+                    PARTNER PANEL
+                </span>
+            </div>
+
+        </a>
+
+
+        <div class="partner-sidebar-content">
+
+            <!-- MAIN -->
+
+            <div class="partner-sidebar-section">
+
+                <div class="partner-sidebar-title">
+                    Main
+                </div>
+
+                <ul class="partner-nav">
+
+                    <li class="partner-nav-item">
+
+                        <a
+                            href="index.html"
+                            class="partner-nav-link active"
+                        >
+
+                            <span class="partner-nav-icon">
+                                <i class="bi bi-grid-1x2-fill"></i>
+                            </span>
+
+                            <span class="partner-nav-text">
+                                Dashboard
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- PROFILE & VEHICLES -->
+
+            <div class="partner-sidebar-section">
+
+                <div class="partner-sidebar-title">
+                    Profile & Vehicles
+                </div>
+
+                <ul class="partner-nav">
+
+                    <li class="partner-nav-item">
+
+                        <a
+                            href="profile.html"
+                            class="partner-nav-link"
+                        >
+
+                            <span class="partner-nav-icon">
+                                <i class="bi bi-person-circle"></i>
+                            </span>
+
+                            <span class="partner-nav-text">
+                                My Profile
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="partner-nav-item">
+
+                        <a
+                            href="vehicles.html"
+                            class="partner-nav-link"
+                        >
+
+                            <span class="partner-nav-icon">
+                                <i class="bi bi-car-front-fill"></i>
+                            </span>
+
+                            <span class="partner-nav-text">
+                                My Vehicles
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="partner-nav-item">
+
+                        <a
+                            href="add-vehicle.html"
+                            class="partner-nav-link"
+                        >
+
+                            <span class="partner-nav-icon">
+                                <i class="bi bi-plus-circle"></i>
+                            </span>
+
+                            <span class="partner-nav-text">
+                                Add Vehicle
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- BOOKINGS -->
+
+            <div class="partner-sidebar-section">
+
+                <div class="partner-sidebar-title">
+                    Bookings
+                </div>
+
+                <ul class="partner-nav">
+
+                    <li class="partner-nav-item">
+
+                        <a
+                            href="bookings.html"
+                            class="partner-nav-link"
+                        >
+
+                            <span class="partner-nav-icon">
+                                <i class="bi bi-calendar-check"></i>
+                            </span>
+
+                            <span class="partner-nav-text">
+                                Booking Requests
+                            </span>
+
+                            <span
+                                class="partner-nav-badge"
+                                id="pendingBookingBadge"
+                                style="display: none;"
+                            >
+                                0
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="partner-nav-item">
+
+                        <a
+                            href="customers.html"
+                            class="partner-nav-link"
+                        >
+
+                            <span class="partner-nav-icon">
+                                <i class="bi bi-people"></i>
+                            </span>
+
+                            <span class="partner-nav-text">
+                                Customers
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- FINANCE -->
+
+            <div class="partner-sidebar-section">
+
+                <div class="partner-sidebar-title">
+                    Finance
+                </div>
+
+                <ul class="partner-nav">
+
+                    <li class="partner-nav-item">
+
+                        <a
+                            href="earnings.html"
+                            class="partner-nav-link"
+                        >
+
+                            <span class="partner-nav-icon">
+                                <i class="bi bi-wallet2"></i>
+                            </span>
+
+                            <span class="partner-nav-text">
+                                Earnings
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- MANAGEMENT -->
+
+            <div class="partner-sidebar-section">
+
+                <div class="partner-sidebar-title">
+                    Management
+                </div>
+
+                <ul class="partner-nav">
+
+                    <li class="partner-nav-item">
+
+                        <a
+                            href="reviews.html"
+                            class="partner-nav-link"
+                        >
+
+                            <span class="partner-nav-icon">
+                                <i class="bi bi-star"></i>
+                            </span>
+
+                            <span class="partner-nav-text">
+                                Reviews
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="partner-nav-item">
+
+                        <a
+                            href="notifications.html"
+                            class="partner-nav-link"
+                        >
+
+                            <span class="partner-nav-icon">
+                                <i class="bi bi-bell"></i>
+                            </span>
+
+                            <span class="partner-nav-text">
+                                Notifications
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="partner-nav-item">
+
+                        <a
+                            href="settings.html"
+                            class="partner-nav-link"
+                        >
+
+                            <span class="partner-nav-icon">
+                                <i class="bi bi-gear"></i>
+                            </span>
+
+                            <span class="partner-nav-text">
+                                Settings
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- LOGOUT -->
+
+            <div class="partner-sidebar-section">
+
+                <ul class="partner-nav">
+
+                    <li class="partner-nav-item">
+
+                        <a
+                            href="#"
+                            class="partner-nav-link"
+                            id="partnerLogoutBtn"
+                        >
+
+                            <span class="partner-nav-icon">
+                                <i class="bi bi-box-arrow-right"></i>
+                            </span>
+
+                            <span class="partner-nav-text">
+                                Logout
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- SIDEBAR OVERLAY -->
+
+    <div
+        class="partner-sidebar-overlay"
+        id="partnerSidebarOverlay"
+    ></div>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="partner-main">
+
+        <!-- =================================================
+             NAVBAR
+             ================================================= -->
+
+        <nav class="partner-navbar">
+
+            <div class="partner-navbar-left">
+
+                <button
+                    type="button"
+                    class="partner-menu-toggle"
+                    id="partnerMenuToggle"
+                >
+                    <i class="bi bi-list"></i>
+                </button>
+
+                <h1 class="partner-page-title">
+                    Dashboard
+                </h1>
+
+            </div>
+
+
+            <div class="partner-navbar-right">
+
+                <!-- Notification -->
+
+                <button
+                    type="button"
+                    class="partner-notification-btn"
+                    title="Notifications"
+                    onclick="window.location.href='notifications.html'"
+                >
+
+                    <i class="bi bi-bell"></i>
+
+                    <span
+                        class="partner-notification-badge"
+                        id="notificationBadge"
+                        style="display: none;"
+                    >
+                        0
+                    </span>
+
+                </button>
+
+
+                <!-- Profile -->
+
+                <div
+                    class="partner-navbar-profile"
+                    id="partnerNavbarProfile"
+                >
+
+                    <div
+                        class="partner-navbar-avatar"
+                        id="partnerNavbarAvatar"
+                    >
+                        <span id="partnerNavbarInitials">
+                            P
+                        </span>
+                    </div>
+
+                    <div class="partner-navbar-user">
+
+                        <div
+                            class="partner-navbar-name"
+                            id="partnerNavbarName"
+                        >
+                            Partner
+                        </div>
+
+                        <div class="partner-navbar-role">
+                            Partner
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+
+        <!-- =================================================
+             CONTENT
+             ================================================= -->
+
+        <div class="partner-content">
+
+
+            <!-- PAGE HEADER -->
+
+            <div class="partner-content-header">
+
+                <div>
+
+                    <h2 class="partner-content-heading">
+                        Welcome back, <span id="welcomePartnerName">Partner</span> 👋
+                    </h2>
+
+                    <p class="partner-content-description">
+                        Manage your vehicles, bookings, customers and earnings from one place.
+                    </p>
+
+                </div>
+
+                <div>
+
+                    <a
+                        href="add-vehicle.html"
+                        class="partner-btn partner-btn-primary"
+                    >
+
+                        <i class="bi bi-plus-lg"></i>
+
+                        Add Vehicle
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- PROFILE STATUS -->
+
+            <div
+                class="partner-alert partner-alert-info mb-4"
+                id="partnerApprovalAlert"
+                style="display: none;"
+            >
+
+                <i class="bi bi-info-circle me-1"></i>
+
+                <span id="partnerApprovalMessage">
+                    Your partner account status will appear here.
+                </span>
+
+            </div>
+
+
+            <!-- =================================================
+                 STAT CARDS
+                 ================================================= -->
+
+            <div class="row g-3 mb-4">
+
+
+                <!-- VEHICLES -->
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="partner-stat-card">
+
+                        <div class="partner-stat-top">
+
+                            <div>
+
+                                <div class="partner-stat-label">
+                                    My Vehicles
+                                </div>
+
+                                <div
+                                    class="partner-stat-value"
+                                    id="totalVehicles"
+                                >
+                                    0
+                                </div>
+
+                            </div>
+
+                            <div class="partner-stat-icon">
+
+                                <i class="bi bi-car-front-fill"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div class="partner-stat-footer">
+
+                            <span id="activeVehicles">
+                                0
+                            </span>
+                            active vehicles
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BOOKINGS -->
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="partner-stat-card">
+
+                        <div class="partner-stat-top">
+
+                            <div>
+
+                                <div class="partner-stat-label">
+                                    Total Bookings
+                                </div>
+
+                                <div
+                                    class="partner-stat-value"
+                                    id="totalBookings"
+                                >
+                                    0
+                                </div>
+
+                            </div>
+
+                            <div class="partner-stat-icon">
+
+                                <i class="bi bi-calendar-check"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div class="partner-stat-footer">
+
+                            <span id="pendingBookings">
+                                0
+                            </span>
+                            pending requests
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CUSTOMERS -->
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="partner-stat-card">
+
+                        <div class="partner-stat-top">
+
+                            <div>
+
+                                <div class="partner-stat-label">
+                                    Customers
+                                </div>
+
+                                <div
+                                    class="partner-stat-value"
+                                    id="totalCustomers"
+                                >
+                                    0
+                                </div>
+
+                            </div>
+
+                            <div class="partner-stat-icon">
+
+                                <i class="bi bi-people-fill"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div class="partner-stat-footer">
+                            Unique customers
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EARNINGS -->
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="partner-stat-card">
+
+                        <div class="partner-stat-top">
+
+                            <div>
+
+                                <div class="partner-stat-label">
+                                    Total Revenue
+                                </div>
+
+                                <div
+                                    class="partner-stat-value"
+                                    id="totalRevenue"
+                                >
+                                    ₹0
+                                </div>
+
+                            </div>
+
+                            <div class="partner-stat-icon">
+
+                                <i class="bi bi-currency-rupee"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div class="partner-stat-footer">
+
+                            <strong>
+                                Trip revenue
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PROFILE + QUICK ACTIONS
+                 ================================================= -->
+
+            <div class="row g-4 mb-4">
+
+
+                <!-- PROFILE -->
+
+                <div class="col-xl-5">
+
+                    <div class="partner-card h-100">
+
+                        <div class="partner-card-header">
+
+                            <div>
+
+                                <h3 class="partner-card-title">
+                                    Partner Profile
+                                </h3>
+
+                                <p class="partner-card-subtitle">
+                                    Your public partner information
+                                </p>
+
+                            </div>
+
+                            <a
+                                href="profile.html"
+                                class="partner-btn partner-btn-secondary partner-btn-sm"
+                            >
+                                Edit Profile
+                            </a>
+
+                        </div>
+
+
+                        <div class="partner-card-body">
+
+                            <div class="partner-profile-header">
+
+
+                                <div
+                                    class="partner-profile-avatar"
+                                    id="partnerProfileAvatar"
+                                >
+
+                                    <span id="partnerProfileInitials">
+                                        P
+                                    </span>
+
+                                </div>
+
+
+                                <div>
+
+                                    <h3
+                                        class="partner-profile-name"
+                                        id="partnerProfileName"
+                                    >
+                                        Partner
+                                    </h3>
+
+                                    <div
+                                        class="partner-profile-location"
+                                        id="partnerProfileLocation"
+                                    >
+                                        Location not added
+                                    </div>
+
+                                    <div class="partner-profile-status">
+
+                                        <span
+                                            class="partner-status partner-status-pending"
+                                            id="partnerProfileStatus"
+                                        >
+                                            Pending
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <hr class="my-4">
+
+
+                            <div class="row g-3">
+
+                                <div class="col-6">
+
+                                    <div class="partner-stat-label">
+                                        Partner Type
+                                    </div>
+
+                                    <div
+                                        class="mt-1 fw-semibold"
+                                        id="partnerType"
+                                    >
+                                        Individual
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-6">
+
+                                    <div class="partner-stat-label">
+                                        Experience
+                                    </div>
+
+                                    <div
+                                        class="mt-1 fw-semibold"
+                                        id="partnerExperience"
+                                    >
+                                        0 years
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-12">
+
+                                    <div class="partner-stat-label">
+                                        Business Name
+                                    </div>
+
+                                    <div
+                                        class="mt-1 fw-semibold"
+                                        id="partnerBusinessName"
+                                    >
+                                        Not added
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUICK ACTIONS -->
+
+                <div class="col-xl-7">
+
+                    <div class="partner-card h-100">
+
+                        <div class="partner-card-header">
+
+                            <div>
+
+                                <h3 class="partner-card-title">
+                                    Quick Actions
+                                </h3>
+
+                                <p class="partner-card-subtitle">
+                                    Manage your TRIPZOVA partner account
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="partner-card-body">
+
+                            <div class="row g-3">
+
+
+                                <div class="col-md-6">
+
+                                    <a
+                                        href="add-vehicle.html"
+                                        class="partner-quick-action"
+                                    >
+
+                                        <div class="partner-quick-action-icon">
+
+                                            <i class="bi bi-car-front"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <h4 class="partner-quick-action-title">
+                                                Add Vehicle
+                                            </h4>
+
+                                            <p class="partner-quick-action-text">
+                                                Add a new vehicle to your fleet.
+                                            </p>
+
+                                        </div>
+
+                                    </a>
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <a
+                                        href="vehicles.html"
+                                        class="partner-quick-action"
+                                    >
+
+                                        <div class="partner-quick-action-icon">
+
+                                            <i class="bi bi-list-ul"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <h4 class="partner-quick-action-title">
+                                                Manage Vehicles
+                                            </h4>
+
+                                            <p class="partner-quick-action-text">
+                                                View and update your vehicles.
+                                            </p>
+
+                                        </div>
+
+                                    </a>
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <a
+                                        href="bookings.html"
+                                        class="partner-quick-action"
+                                    >
+
+                                        <div class="partner-quick-action-icon">
+
+                                            <i class="bi bi-calendar-check"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <h4 class="partner-quick-action-title">
+                                                Booking Requests
+                                            </h4>
+
+                                            <p class="partner-quick-action-text">
+                                                Accept or reject customer requests.
+                                            </p>
+
+                                        </div>
+
+                                    </a>
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <a
+                                        href="profile.html"
+                                        class="partner-quick-action"
+                                    >
+
+                                        <div class="partner-quick-action-icon">
+
+                                            <i class="bi bi-person-gear"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <h4 class="partner-quick-action-title">
+                                                Update Profile
+                                            </h4>
+
+                                            <p class="partner-quick-action-text">
+                                                Keep your partner details updated.
+                                            </p>
+
+                                        </div>
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 RECENT BOOKINGS
+                 ================================================= -->
+
+            <div class="partner-card mb-4">
+
+                <div class="partner-card-header">
+
+                    <div>
+
+                        <h3 class="partner-card-title">
+                            Recent Booking Requests
+                        </h3>
+
+                        <p class="partner-card-subtitle">
+                            Your latest customer booking activity
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="bookings.html"
+                        class="partner-btn partner-btn-secondary partner-btn-sm"
+                    >
+                        View All
+                    </a>
+
+                </div>
+
+
+                <div
+                    class="partner-table-wrapper"
+                    id="recentBookingsContainer"
+                >
+
+                    <div class="partner-empty-state">
+
+                        <div class="partner-empty-icon">
+
+                            <i class="bi bi-calendar3"></i>
+
+                        </div>
+
+                        <h4 class="partner-empty-title">
+                            No bookings yet
+                        </h4>
+
+                        <p class="partner-empty-text">
+                            Customer booking requests will appear here once your approved vehicles are available.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 VEHICLES
+                 ================================================= -->
+
+            <div class="partner-card">
+
+                <div class="partner-card-header">
+
+                    <div>
+
+                        <h3 class="partner-card-title">
+                            My Vehicles
+                        </h3>
+
+                        <p class="partner-card-subtitle">
+                            Recently added vehicles
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="vehicles.html"
+                        class="partner-btn partner-btn-secondary partner-btn-sm"
+                    >
+                        View All
+                    </a>
+
+                </div>
+
+
+                <div class="partner-card-body">
+
+                    <div
+                        class="row g-3"
+                        id="dashboardVehicles"
+                    >
+
+                        <div class="col-12">
+
+                            <div class="partner-empty-state">
+
+                                <div class="partner-empty-icon">
+
+                                    <i class="bi bi-car-front"></i>
+
+                                </div>
+
+                                <h4 class="partner-empty-title">
+                                    No vehicles added
+                                </h4>
+
+                                <p class="partner-empty-text">
+                                    Add your first vehicle so customers can discover your service.
+                                </p>
+
+                                <a
+                                    href="add-vehicle.html"
+                                    class="partner-btn partner-btn-primary"
+                                >
+
+                                    <i class="bi bi-plus-lg"></i>
+
+                                    Add Vehicle
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         SCRIPTS
+         ===================================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
+
+    <script src="js/partner.js"></script>
+
+    <script src="js/dashboard.js"></script>
+
+</body>
+
+</html>

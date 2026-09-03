@@ -373,6 +373,25 @@ const loginUser = async (req, res) => {
 
         }
 
+                    if (user.accountStatus === "suspended") {
+
+                return res.status(403).json({
+                    message:
+                        "Your account has been suspended. Please contact TRIPZOVA support."
+                });
+
+            }
+
+
+            if (user.accountStatus === "blocked") {
+
+                return res.status(403).json({
+                    message:
+                        "Your account has been blocked. Please contact TRIPZOVA support."
+                });
+
+            }
+
 
         /* ---------------------------------------------
            CREATE JWT

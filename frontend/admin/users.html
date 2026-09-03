@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Users | TRIPZOVA Admin</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        <div class="sidebar-brand">
+            <div class="brand-icon">
+                <i class="bi bi-airplane-fill"></i>
+            </div>
+
+            <span>TRIPZOVA</span>
+        </div>
+
+        <div class="sidebar-content">
+
+            <div class="sidebar-section-title">MAIN</div>
+
+            <a href="index.html" class="sidebar-link">
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+
+
+            <div class="sidebar-section-title">USERS & PARTNERS</div>
+
+            <a href="users.html" class="sidebar-link active">
+                <i class="bi bi-people-fill"></i>
+                <span>Users</span>
+            </a>
+
+            <a href="partners.html" class="sidebar-link">
+                <i class="bi bi-person-badge-fill"></i>
+                <span>Partners</span>
+                <span class="sidebar-badge" id="sidebarPendingBadge">0</span>
+            </a>
+
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-person-walking"></i>
+                <span>Travellers</span>
+            </a>
+
+
+            <div class="sidebar-section-title">TRIPZOVA SERVICES</div>
+
+            <a href="tours.html" class="sidebar-link">
+                <i class="bi bi-map-fill"></i>
+                <span>Tours</span>
+            </a>
+
+            <a href="rides.html" class="sidebar-link">
+                <i class="bi bi-car-front-fill"></i>
+                <span>Rides</span>
+            </a>
+
+            <a href="bookings.html" class="sidebar-link">
+                <i class="bi bi-calendar-check-fill"></i>
+                <span>Bookings</span>
+            </a>
+
+
+            <div class="sidebar-section-title">FINANCE</div>
+
+            <a href="payments.html" class="sidebar-link">
+                <i class="bi bi-credit-card-fill"></i>
+                <span>Payments</span>
+            </a>
+
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-wallet2"></i>
+                <span>Partner Earnings</span>
+            </a>
+
+
+            <div class="sidebar-section-title">MANAGEMENT</div>
+
+            <a href="reports.html" class="sidebar-link">
+                <i class="bi bi-bar-chart-fill"></i>
+                <span>Reports</span>
+            </a>
+
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-star-fill"></i>
+                <span>Reviews</span>
+            </a>
+
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-bell-fill"></i>
+                <span>Notifications</span>
+            </a>
+
+            <a href="settings.html" class="sidebar-link">
+                <i class="bi bi-gear-fill"></i>
+                <span>Settings</span>
+            </a>
+
+        </div>
+
+        <div class="sidebar-footer">
+
+            <button
+                class="sidebar-logout"
+                id="logoutBtn"
+                type="button"
+            >
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+        <!-- NAVBAR -->
+        <header class="admin-navbar">
+
+            <button
+                class="mobile-menu-btn"
+                id="mobileMenuBtn"
+                type="button"
+            >
+                <i class="bi bi-list"></i>
+            </button>
+
+
+            <div class="navbar-page-title">
+
+                <div class="navbar-title">
+                    Users
+                </div>
+
+                <div class="navbar-subtitle">
+                    Manage TRIPZOVA users and accounts
+                </div>
+
+            </div>
+
+
+            <div class="navbar-actions">
+
+                <button
+                    class="navbar-icon-btn"
+                    type="button"
+                >
+                    <i class="bi bi-bell"></i>
+                    <span class="notification-dot"></span>
+                </button>
+
+
+                <div class="admin-profile">
+
+                    <div class="admin-profile-avatar">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+
+                    <div class="admin-profile-info">
+
+                        <strong id="adminName">
+                            TRIPZOVA Admin
+                        </strong>
+
+                        <small>
+                            Administrator
+                        </small>
+
+                    </div>
+
+                    <i class="bi bi-chevron-down profile-arrow"></i>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- CONTENT -->
+        <div class="admin-content">
+
+            <!-- PAGE HEADING -->
+            <div class="page-heading-row">
+
+                <div>
+
+                    <h1>
+                        Users
+                    </h1>
+
+                    <p>
+                        View and manage all registered TRIPZOVA users.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="admin-primary-btn"
+                    id="refreshUsersBtn"
+                >
+                    <i class="bi bi-arrow-clockwise"></i>
+                    Refresh
+                </button>
+
+            </div>
+
+
+            <!-- STAT CARDS -->
+            <div class="row g-4 mb-4">
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon purple">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+
+                        <div class="admin-stat-content">
+
+                            <span>
+                                Total Users
+                            </span>
+
+                            <strong id="totalUsers">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon blue">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+
+                        <div class="admin-stat-content">
+
+                            <span>
+                                Customers
+                            </span>
+
+                            <strong id="customerUsers">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon green">
+                            <i class="bi bi-person-walking"></i>
+                        </div>
+
+                        <div class="admin-stat-content">
+
+                            <span>
+                                Travellers
+                            </span>
+
+                            <strong id="travellerUsers">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon orange">
+                            <i class="bi bi-person-badge-fill"></i>
+                        </div>
+
+                        <div class="admin-stat-content">
+
+                            <span>
+                                Partners
+                            </span>
+
+                            <strong id="partnerUsers">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- USERS TABLE -->
+            <div class="admin-card">
+
+                <div class="admin-card-header users-toolbar">
+
+                    <div>
+
+                        <h3>
+                            All Users
+                        </h3>
+
+                        <p>
+                            Search and filter registered accounts.
+                        </p>
+
+                    </div>
+
+
+                    <div class="users-toolbar-controls">
+
+                        <div class="partner-search">
+
+                            <i class="bi bi-search"></i>
+
+                            <input
+                                type="text"
+                                id="userSearch"
+                                placeholder="Search users..."
+                            >
+
+                        </div>
+
+
+                        <select
+                            id="userRoleFilter"
+                            class="partner-filter"
+                        >
+                            <option value="">
+                                All Roles
+                            </option>
+
+                            <option value="customer">
+                                Customers
+                            </option>
+
+                            <option value="traveller">
+                                Travellers
+                            </option>
+
+                            <option value="partner">
+                                Partners
+                            </option>
+
+                            <option value="admin">
+                                Admins
+                            </option>
+
+                        </select>
+
+
+                        <select
+                            id="userStatusFilter"
+                            class="partner-filter"
+                        >
+                            <option value="">
+                                All Status
+                            </option>
+
+                            <option value="active">
+                                Active
+                            </option>
+
+                            <option value="suspended">
+                                Suspended
+                            </option>
+
+                            <option value="blocked">
+                                Blocked
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOADING -->
+                <div
+                    id="usersLoading"
+                    class="admin-loading"
+                >
+                    <div
+                        class="spinner-border"
+                        role="status"
+                    ></div>
+
+                    <span>
+                        Loading users...
+                    </span>
+                </div>
+
+
+                <!-- ERROR -->
+                <div
+                    id="usersError"
+                    class="admin-error"
+                    style="display:none;"
+                ></div>
+
+
+                <!-- TABLE -->
+                <div
+                    id="usersTableContainer"
+                    class="table-responsive"
+                >
+
+                    <table class="table admin-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    User
+                                </th>
+
+                                <th>
+                                    Phone
+                                </th>
+
+                                <th>
+                                    Role
+                                </th>
+
+                                <th>
+                                    Registered
+                                </th>
+
+                                <th>
+                                    Phone
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="usersTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- EMPTY -->
+                <div
+                    id="usersEmpty"
+                    class="admin-empty"
+                    style="display:none;"
+                >
+
+                    <div class="admin-empty-icon">
+
+                        <i class="bi bi-people"></i>
+
+                    </div>
+
+                    <h4>
+                        No users found
+                    </h4>
+
+                    <p>
+                        No users match your current search or filters.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- USER DETAILS MODAL -->
+<div
+    class="modal fade"
+    id="userDetailsModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content partner-modal">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    User Details
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div
+                    id="userDetailsLoading"
+                    class="admin-loading"
+                >
+
+                    <div class="spinner-border"></div>
+
+                    <span>
+                        Loading details...
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="userDetailsContent"
+                    style="display:none;"
+                >
+
+                    <div class="partner-profile-header">
+
+                        <div
+                            class="partner-large-avatar"
+                            id="userDetailAvatar"
+                        >
+                        </div>
+
+
+                        <div>
+
+                            <h3 id="userDetailName">
+                                -
+                            </h3>
+
+                            <p id="userDetailEmail">
+                                -
+                            </p>
+
+                            <span
+                                id="userDetailRole"
+                                class="admin-status"
+                            >
+                                -
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="partner-details-grid">
+
+                        <div class="partner-detail-item">
+
+                            <span>
+                                Phone
+                            </span>
+
+                            <strong id="userDetailPhone">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="partner-detail-item">
+
+                            <span>
+                                City
+                            </span>
+
+                            <strong id="userDetailCity">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="partner-detail-item">
+
+                            <span>
+                                Address
+                            </span>
+
+                            <strong id="userDetailAddress">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="partner-detail-item">
+
+                            <span>
+                                Registered
+                            </span>
+
+                            <strong id="userDetailRegistered">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="partner-detail-item">
+
+                            <span>
+                                Phone Verification
+                            </span>
+
+                            <strong id="userDetailPhoneVerified">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="partner-detail-item">
+
+                            <span>
+                                Account Status
+                            </span>
+
+                            <strong id="userDetailStatus">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="partner-detail-item">
+
+                            <span>
+                                Authentication
+                            </span>
+
+                            <strong id="userDetailAuth">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="partner-detail-item">
+
+                            <span>
+                                Partner Status
+                            </span>
+
+                            <strong id="userDetailPartnerStatus">
+                                -
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <div
+                    class="user-status-actions"
+                    id="userStatusActions"
+                >
+                </div>
+
+                <button
+                    type="button"
+                    class="btn btn-light"
+                    data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
+<script src="js/admin.js"></script>
+<script src="js/users.js"></script>
+
+</body>
+
+</html>
