@@ -1,69 +1,87 @@
-// =====================================================
-// TRIPZOVA PARTNER PROFILE
-// =====================================================
+/* =========================================================
+   TRIPZOVA PARTNER - PROFILE PAGE
+========================================================= */
 
 (function () {
     "use strict";
 
 
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
+
+    const profileForm =
+        document.getElementById("partnerProfileForm");
+
+    const saveButton =
+        document.getElementById("saveProfileBtn");
+
+    const cancelButton =
+        document.getElementById("cancelProfileBtn");
+
+    const profilePictureInput =
+        document.getElementById("profilePicture");
+
+    const removeProfilePictureButton =
+        document.getElementById(
+            "removeProfilePictureBtn"
+        );
+
+
+    /* =====================================================
+       ORIGINAL PROFILE
+    ===================================================== */
+
     let originalProfile = null;
+
     let selectedProfilePicture = "";
 
 
-    // =================================================
-    // LOAD PROFILE
-    // =================================================
+    /* =====================================================
+       LOAD PROFILE
+    ===================================================== */
 
-    async function loadPartnerProfile() {
+    async function loadProfile() {
 
         try {
 
-            const response =
+            const data =
                 await partnerFetch(
                     "/api/partners/profile"
                 );
 
             const profile =
-                response.profile ||
-                response.data?.profile ||
-                response.data;
-
-
-            if (!profile) {
-                throw new Error(
-                    "Profile data not found."
-                );
-            }
-
+                data.profile || data;
 
             originalProfile =
                 JSON.parse(
                     JSON.stringify(profile)
                 );
 
-
-            populateProfile(profile);
+            fillProfile(profile);
 
         } catch (error) {
 
             console.error(
-                "Profile loading error:",
+                "Partner profile loading error:",
                 error
             );
 
-            showProfileError(
+            showError(
                 error.message ||
                 "Unable to load your profile."
             );
+
         }
+
     }
 
 
-    // =================================================
-    // POPULATE FORM
-    // =================================================
+    /* =====================================================
+       FILL FORM
+    ===================================================== */
 
-    function populateProfile(profile) {
+    function fillProfile(profile) {
 
         setValue(
             "displayName",
@@ -91,6 +109,12 @@
         );
 
         setValue(
+            "partnerType",
+            profile.partnerType ||
+            "individual"
+        );
+
+        setValue(
             "address",
             profile.address
         );
@@ -105,19 +129,12 @@
             profile.experienceYears || 0
         );
 
-        setValue(
-            "partnerType",
-            profile.partnerType ||
-            "individual"
-        );
-
-
-        // Languages
 
         const languages =
             Array.isArray(profile.languages)
                 ? profile.languages.join(", ")
-                : "";
+                : profile.languages || "";
+
 
         setValue(
             "languages",
@@ -125,399 +142,188 @@
         );
 
 
-        selectedProfilePicture =
-            profile.profilePicture || "";
+        /* Profile status */
 
-
-        updateAvatar(
-            profile
+        updateProfileStatus(
+            profile.profileStatus
         );
 
+
+        /* Visibility */
 
         updateVisibility(
             profile
         );
 
 
-        updateProfileStatus(
+        /* Profile picture */
+
+        if (profile.profilePicture) {
+
+            selectedProfilePicture =
+                profile.profilePicture;
+
+            showProfilePicture(
+                profile.profilePicture
+            );
+
+        } else {
+
+            showInitials(
+                profile.displayName
+            );
+
+        }
+
+
+        /* Navbar */
+
+        updateNavbar(
             profile
         );
+
     }
 
 
-    // =================================================
-    // SAVE PROFILE
-    // =================================================
+    /* =====================================================
+       SET INPUT VALUE
+    ===================================================== */
 
-    async function saveProfile(event) {
+    function setValue(id, value) {
 
-        event.preventDefault();
+        const element =
+            document.getElementById(id);
 
-
-        const displayName =
-            getValue("displayName").trim();
-
-
-        if (!displayName) {
-
-            showProfileError(
-                "Display name is required."
-            );
-
-            document
-                .getElementById("displayName")
-                ?.focus();
-
+        if (!element) {
             return;
         }
 
+        element.value =
+            value === null ||
+            value === undefined
+                ? ""
+                : value;
 
-        const experienceValue =
-            Number(
-                getValue(
-                    "experienceYears"
-                ) || 0
-            );
-
-
-        if (
-            experienceValue < 0 ||
-            experienceValue > 100
-        ) {
-
-            showProfileError(
-                "Experience must be between 0 and 100 years."
-            );
-
-            return;
-        }
-
-
-        const languages =
-            getValue("languages")
-                .split(",")
-                .map(
-                    function (language) {
-                        return language.trim();
-                    }
-                )
-                .filter(Boolean);
-
-
-        const profileData = {
-
-            profilePicture:
-                selectedProfilePicture,
-
-            businessName:
-                getValue(
-                    "businessName"
-                ).trim(),
-
-            displayName,
-
-            phone:
-                getValue(
-                    "phone"
-                ).trim(),
-
-            email:
-                getValue(
-                    "email"
-                ).trim(),
-
-            city:
-                getValue(
-                    "city"
-                ).trim(),
-
-            address:
-                getValue(
-                    "address"
-                ).trim(),
-
-            about:
-                getValue(
-                    "about"
-                ).trim(),
-
-            experienceYears:
-                experienceValue,
-
-            languages,
-
-            partnerType:
-                getValue(
-                    "partnerType"
-                ),
-
-            profileStatus:
-                "complete"
-        };
-
-
-        const saveButton =
-            document.getElementById(
-                "saveProfileBtn"
-            );
-
-
-        try {
-
-            setButtonLoading(
-                saveButton,
-                true
-            );
-
-
-            hideProfileMessages();
-
-
-            const response =
-                await partnerFetch(
-                    "/api/partners/profile",
-                    {
-                        method: "PUT",
-                        body: JSON.stringify(
-                            profileData
-                        )
-                    }
-                );
-
-
-            const updatedProfile =
-                response.profile ||
-                response.data?.profile ||
-                response.data;
-
-
-            if (updatedProfile) {
-
-                originalProfile =
-                    JSON.parse(
-                        JSON.stringify(
-                            updatedProfile
-                        )
-                    );
-
-                populateProfile(
-                    updatedProfile
-                );
-            }
-
-
-            showProfileSuccess(
-                response.message ||
-                "Profile updated successfully."
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Profile save error:",
-                error
-            );
-
-            showProfileError(
-                error.message ||
-                "Unable to save your profile."
-            );
-
-        } finally {
-
-            setButtonLoading(
-                saveButton,
-                false
-            );
-        }
     }
 
 
-    // =================================================
-    // PROFILE PICTURE
-    // =================================================
+    /* =====================================================
+       PROFILE STATUS
+    ===================================================== */
 
-    function initializeProfilePicture() {
+    function updateProfileStatus(status) {
 
-        const input =
+        const element =
             document.getElementById(
-                "profilePicture"
+                "profileStatus"
             );
 
-
-        if (!input) {
+        if (!element) {
             return;
         }
 
 
-        input.addEventListener(
-            "change",
-            function () {
-
-                const file =
-                    input.files?.[0];
+        const cleanStatus =
+            status || "incomplete";
 
 
-                if (!file) {
-                    return;
-                }
+        element.textContent =
+            cleanStatus === "complete"
+                ? "Complete"
+                : "Incomplete";
 
 
-                if (
-                    !file.type.startsWith(
-                        "image/"
-                    )
-                ) {
-
-                    showProfileError(
-                        "Please select a valid image."
-                    );
-
-                    input.value = "";
-
-                    return;
-                }
-
-
-                if (
-                    file.size >
-                    5 * 1024 * 1024
-                ) {
-
-                    showProfileError(
-                        "Profile picture must be smaller than 5 MB."
-                    );
-
-                    input.value = "";
-
-                    return;
-                }
-
-
-                const reader =
-                    new FileReader();
-
-
-                reader.onload =
-                    function (event) {
-
-                        selectedProfilePicture =
-                            event.target.result;
-
-
-                        updateAvatar({
-                            displayName:
-                                getValue(
-                                    "displayName"
-                                ),
-                            profilePicture:
-                                selectedProfilePicture
-                        });
-                    };
-
-
-                reader.readAsDataURL(
-                    file
-                );
-            }
+        element.classList.remove(
+            "partner-status-pending",
+            "partner-status-approved",
+            "partner-status-rejected",
+            "partner-status-inactive"
         );
+
+
+        if (cleanStatus === "complete") {
+
+            element.classList.add(
+                "partner-status-approved"
+            );
+
+        } else {
+
+            element.classList.add(
+                "partner-status-pending"
+            );
+
+        }
+
     }
 
 
-    // =================================================
-    // REMOVE PROFILE PICTURE
-    // =================================================
+    /* =====================================================
+       VISIBILITY
+    ===================================================== */
 
-    function initializeRemovePicture() {
+    function updateVisibility(profile) {
 
-        const button =
+        const nameElement =
             document.getElementById(
-                "removeProfilePictureBtn"
+                "visibilityName"
+            );
+
+        const locationElement =
+            document.getElementById(
+                "visibilityLocation"
+            );
+
+        const typeElement =
+            document.getElementById(
+                "visibilityType"
             );
 
 
-        if (!button) {
-            return;
+        if (nameElement) {
+
+            nameElement.textContent =
+                profile.displayName ||
+                "-";
+
         }
 
 
-        button.addEventListener(
-            "click",
-            function () {
+        if (locationElement) {
 
-                selectedProfilePicture =
-                    "";
+            locationElement.textContent =
+                profile.city ||
+                "-";
 
-
-                const input =
-                    document.getElementById(
-                        "profilePicture"
-                    );
-
-
-                if (input) {
-                    input.value = "";
-                }
-
-
-                updateAvatar({
-                    displayName:
-                        getValue(
-                            "displayName"
-                        ),
-                    profilePicture: ""
-                });
-            }
-        );
-    }
-
-
-    // =================================================
-    // CANCEL
-    // =================================================
-
-    function initializeCancel() {
-
-        const button =
-            document.getElementById(
-                "cancelProfileBtn"
-            );
-
-
-        if (!button) {
-            return;
         }
 
 
-        button.addEventListener(
-            "click",
-            function () {
+        if (typeElement) {
 
-                if (
-                    originalProfile
-                ) {
+            let type =
+                profile.partnerType ||
+                "-";
 
-                    populateProfile(
-                        originalProfile
-                    );
+            type =
+                type
+                    .replace(/_/g, " ")
+                    .replace(/\b\w/g, function (letter) {
+                        return letter.toUpperCase();
+                    });
 
-                    hideProfileMessages();
+            typeElement.textContent =
+                type;
 
-                } else {
+        }
 
-                    loadPartnerProfile();
-                }
-            }
-        );
     }
 
 
-    // =================================================
-    // AVATAR
-    // =================================================
+    /* =====================================================
+       PROFILE AVATAR
+    ===================================================== */
 
-    function updateAvatar(profile) {
+    function showProfilePicture(url) {
 
         const avatar =
             document.getElementById(
@@ -535,178 +341,594 @@
         }
 
 
-        if (
-            profile.profilePicture
-        ) {
-
-            avatar.innerHTML = `
-                <img
-                    src="${escapeHTML(
-                        profile.profilePicture
-                    )}"
-                    alt="${escapeHTML(
-                        profile.displayName ||
-                        "Partner"
-                    )}"
-                >
-            `;
-
-        } else {
-
-            const name =
-                profile.displayName ||
-                "Partner";
+        let image =
+            avatar.querySelector("img");
 
 
-            avatar.innerHTML = `
-                <span>
-                    ${escapeHTML(
-                        getInitials(name)
-                    )}
-                </span>
-            `;
+        if (!image) {
+
+            image =
+                document.createElement("img");
+
+            avatar.appendChild(image);
+
         }
+
+
+        image.src = url;
+
+        image.alt = "Profile Picture";
+
+
+        if (initials) {
+            initials.style.display = "none";
+        }
+
     }
 
 
-    // =================================================
-    // VISIBILITY
-    // =================================================
+    function showInitials(name) {
 
-    function updateVisibility(profile) {
-
-        setText(
-            "visibilityName",
-            profile.displayName ||
-            "-"
-        );
-
-
-        setText(
-            "visibilityLocation",
-            profile.city ||
-            "-"
-        );
-
-
-        setText(
-            "visibilityType",
-            formatStatus(
-                profile.partnerType ||
-                "individual"
-            )
-        );
-    }
-
-
-    // =================================================
-    // PROFILE STATUS
-    // =================================================
-
-    function updateProfileStatus(profile) {
-
-        const statusElement =
+        const avatar =
             document.getElementById(
-                "profileStatus"
+                "profileAvatar"
+            );
+
+        const initials =
+            document.getElementById(
+                "profileInitials"
             );
 
 
-        if (!statusElement) {
+        if (!avatar) {
             return;
         }
 
 
-        const status =
-            profile.user?.partnerStatus ||
-            profile.partnerStatus ||
-            "pending";
+        const oldImage =
+            avatar.querySelector("img");
+
+        if (oldImage) {
+            oldImage.remove();
+        }
 
 
-        statusElement.textContent =
-            formatStatus(status);
+        if (initials) {
 
+            initials.textContent =
+                window.getInitials
+                    ? window.getInitials(name)
+                    : "P";
 
-        statusElement.className =
-            `partner-status ${getStatusClass(
-                status
-            )}`;
+            initials.style.display =
+                "block";
+
+        }
+
     }
 
 
-    // =================================================
-    // FORM HELPERS
-    // =================================================
+    /* =====================================================
+       NAVBAR
+    ===================================================== */
+
+    function updateNavbar(profile) {
+
+        const name =
+            profile.displayName ||
+            "Partner";
+
+
+        const navbarName =
+            document.getElementById(
+                "partnerNavbarName"
+            );
+
+        const navbarInitials =
+            document.getElementById(
+                "partnerNavbarInitials"
+            );
+
+
+        if (navbarName) {
+            navbarName.textContent =
+                name;
+        }
+
+
+        if (navbarInitials) {
+
+            navbarInitials.textContent =
+                window.getInitials
+                    ? window.getInitials(name)
+                    : "P";
+
+        }
+
+
+        const navbarAvatar =
+            document.getElementById(
+                "partnerNavbarAvatar"
+            );
+
+
+        if (
+            navbarAvatar &&
+            profile.profilePicture
+        ) {
+
+            let image =
+                navbarAvatar.querySelector("img");
+
+
+            if (!image) {
+
+                image =
+                    document.createElement("img");
+
+                navbarAvatar.appendChild(image);
+
+            }
+
+
+            image.src =
+                profile.profilePicture;
+
+            image.alt =
+                "Partner Profile";
+
+        }
+
+    }
+
+
+    /* =====================================================
+       PROFILE PHOTO SELECTION
+    ===================================================== */
+
+    if (profilePictureInput) {
+
+        profilePictureInput.addEventListener(
+            "change",
+            function () {
+
+                const file =
+                    this.files &&
+                    this.files[0];
+
+
+                if (!file) {
+                    return;
+                }
+
+
+                const allowedTypes = [
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp"
+                ];
+
+
+                if (
+                    !allowedTypes.includes(
+                        file.type
+                    )
+                ) {
+
+                    showError(
+                        "Please select a JPG, PNG or WEBP image."
+                    );
+
+                    this.value = "";
+
+                    return;
+                }
+
+
+                /* 5 MB maximum */
+
+                if (
+                    file.size >
+                    5 * 1024 * 1024
+                ) {
+
+                    showError(
+                        "Profile photo must be smaller than 5 MB."
+                    );
+
+                    this.value = "";
+
+                    return;
+                }
+
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload =
+                    function (event) {
+
+                        selectedProfilePicture =
+                            event.target.result;
+
+                        showProfilePicture(
+                            selectedProfilePicture
+                        );
+
+                        hideMessages();
+
+                    };
+
+
+                reader.readAsDataURL(file);
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       REMOVE PROFILE PHOTO
+    ===================================================== */
+
+    if (removeProfilePictureButton) {
+
+        removeProfilePictureButton.addEventListener(
+            "click",
+            function () {
+
+                selectedProfilePicture =
+                    "";
+
+                if (profilePictureInput) {
+                    profilePictureInput.value =
+                        "";
+                }
+
+
+                const displayName =
+                    document.getElementById(
+                        "displayName"
+                    )?.value ||
+                    "Partner";
+
+
+                showInitials(
+                    displayName
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       SAVE PROFILE
+    ===================================================== */
+
+    if (profileForm) {
+
+        profileForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+                hideMessages();
+
+
+                const displayName =
+                    getValue("displayName");
+
+
+                if (!displayName) {
+
+                    showError(
+                        "Display Name is required."
+                    );
+
+                    document
+                        .getElementById("displayName")
+                        ?.focus();
+
+                    return;
+                }
+
+
+                const experienceValue =
+                    getValue(
+                        "experienceYears"
+                    );
+
+
+                let experienceYears =
+                    Number(experienceValue);
+
+
+                if (
+                    Number.isNaN(
+                        experienceYears
+                    ) ||
+                    experienceYears < 0
+                ) {
+
+                    experienceYears = 0;
+
+                }
+
+
+                const languagesText =
+                    getValue("languages");
+
+
+                const languages =
+                    languagesText
+                        ? languagesText
+                            .split(",")
+                            .map(function (language) {
+                                return language.trim();
+                            })
+                            .filter(Boolean)
+                        : [];
+
+
+                const profileData = {
+
+                    displayName,
+
+                    businessName:
+                        getValue("businessName"),
+
+                    phone:
+                        getValue("phone"),
+
+                    email:
+                        getValue("email"),
+
+                    city:
+                        getValue("city"),
+
+                    partnerType:
+                        getValue("partnerType") ||
+                        "individual",
+
+                    address:
+                        getValue("address"),
+
+                    about:
+                        getValue("about"),
+
+                    experienceYears,
+
+                    languages
+
+                };
+
+
+                /*
+                 * IMPORTANT:
+                 *
+                 * The current backend does not have
+                 * an image-upload endpoint yet.
+                 *
+                 * Therefore we don't send the local
+                 * base64 preview to MongoDB.
+                 *
+                 * Photo upload backend will be added
+                 * separately.
+                 */
+
+
+                setSaving(true);
+
+
+                try {
+
+                    const data =
+                        await partnerFetch(
+                            "/api/partners/profile",
+                            {
+                                method: "PUT",
+                                body:
+                                    JSON.stringify(
+                                        profileData
+                                    )
+                            }
+                        );
+
+
+                    const updatedProfile =
+                        data.profile ||
+                        data;
+
+
+                    originalProfile =
+                        JSON.parse(
+                            JSON.stringify(
+                                updatedProfile
+                            )
+                        );
+
+
+                    fillProfile(
+                        updatedProfile
+                    );
+
+
+                    showSuccess(
+                        data.message ||
+                        "Profile updated successfully."
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Profile update error:",
+                        error
+                    );
+
+                    showError(
+                        error.message ||
+                        "Unable to update your profile."
+                    );
+
+                } finally {
+
+                    setSaving(false);
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       CANCEL
+    ===================================================== */
+
+    if (cancelButton) {
+
+        cancelButton.addEventListener(
+            "click",
+            function () {
+
+                if (!originalProfile) {
+                    return;
+                }
+
+
+                fillProfile(
+                    originalProfile
+                );
+
+
+                hideMessages();
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       GET VALUE
+    ===================================================== */
 
     function getValue(id) {
 
         const element =
             document.getElementById(id);
 
-        return element
-            ? element.value
-            : "";
-    }
-
-
-    function setValue(id, value) {
-
-        const element =
-            document.getElementById(id);
-
-        if (element) {
-            element.value =
-                value ?? "";
+        if (!element) {
+            return "";
         }
+
+        return element.value.trim();
+
     }
 
 
-    // =================================================
-    // BUTTON LOADING
-    // =================================================
+    /* =====================================================
+       BUTTON STATE
+    ===================================================== */
 
-    function setButtonLoading(
-        button,
-        loading
-    ) {
+    function setSaving(isSaving) {
 
-        if (!button) {
+        if (!saveButton) {
             return;
         }
 
 
-        if (loading) {
+        if (isSaving) {
 
-            button.dataset.originalText =
-                button.innerHTML;
+            saveButton.disabled =
+                true;
 
-            button.disabled = true;
-
-            button.innerHTML = `
+            saveButton.innerHTML =
+                `
                 <span
-                    class="spinner-border spinner-border-sm me-2"
+                    class="spinner-border spinner-border-sm"
+                    aria-hidden="true"
                 ></span>
                 Saving...
-            `;
+                `;
 
         } else {
 
-            button.disabled = false;
+            saveButton.disabled =
+                false;
 
-            button.innerHTML =
-                button.dataset.originalText ||
+            saveButton.innerHTML =
                 `
-                    <i class="bi bi-check-lg"></i>
-                    Save Changes
+                <i class="bi bi-check-lg"></i>
+                Save Changes
                 `;
+
         }
+
     }
 
 
-    // =================================================
-    // MESSAGES
-    // =================================================
+    /* =====================================================
+       MESSAGES
+    ===================================================== */
 
-    function hideProfileMessages() {
+    function showError(message) {
+
+        const element =
+            document.getElementById(
+                "partnerProfileError"
+            );
+
+        if (!element) {
+            alert(message);
+            return;
+        }
+
+
+        element.textContent =
+            message;
+
+        element.className =
+            "partner-alert partner-alert-danger";
+
+        element.style.display =
+            "block";
+
+    }
+
+
+    function showSuccess(message) {
+
+        const element =
+            document.getElementById(
+                "partnerProfileSuccess"
+            );
+
+        if (!element) {
+            return;
+        }
+
+
+        element.textContent =
+            message;
+
+        element.className =
+            "partner-alert partner-alert-success";
+
+        element.style.display =
+            "block";
+
+    }
+
+
+    function hideMessages() {
 
         const error =
             document.getElementById(
@@ -729,136 +951,17 @@
             success.style.display =
                 "none";
         }
+
     }
 
 
-    function showProfileError(message) {
-
-        const element =
-            document.getElementById(
-                "partnerProfileError"
-            );
-
-
-        if (!element) {
-            return;
-        }
-
-
-        element.className =
-            "partner-alert partner-alert-danger mb-4";
-
-
-        element.innerHTML = `
-            <i class="bi bi-exclamation-triangle"></i>
-            <span>
-                ${escapeHTML(message)}
-            </span>
-        `;
-
-
-        element.style.display =
-            "block";
-
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-    }
-
-
-    function showProfileSuccess(message) {
-
-        const element =
-            document.getElementById(
-                "partnerProfileSuccess"
-            );
-
-
-        if (!element) {
-            return;
-        }
-
-
-        element.className =
-            "partner-alert partner-alert-success mb-4";
-
-
-        element.innerHTML = `
-            <i class="bi bi-check-circle"></i>
-            <span>
-                ${escapeHTML(message)}
-            </span>
-        `;
-
-
-        element.style.display =
-            "block";
-
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
-
-        setTimeout(
-            function () {
-
-                element.style.display =
-                    "none";
-
-            },
-            5000
-        );
-    }
-
-
-    // =================================================
-    // START
-    // =================================================
+    /* =====================================================
+       START
+    ===================================================== */
 
     document.addEventListener(
         "DOMContentLoaded",
-        function () {
-
-            if (
-                typeof requirePartnerLogin ===
-                "function"
-            ) {
-
-                if (
-                    !requirePartnerLogin()
-                ) {
-                    return;
-                }
-            }
-
-
-            loadPartnerProfile();
-
-            initializeProfilePicture();
-
-            initializeRemovePicture();
-
-            initializeCancel();
-
-
-            const form =
-                document.getElementById(
-                    "partnerProfileForm"
-                );
-
-
-            if (form) {
-
-                form.addEventListener(
-                    "submit",
-                    saveProfile
-                );
-            }
-        }
+        loadProfile
     );
 
 })();

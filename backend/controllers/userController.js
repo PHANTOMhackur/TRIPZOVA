@@ -281,12 +281,22 @@ const registerUser = async (req, res) => {
 
             console.error(
                 "MSG91 registration verification error:",
-                error
+                error.message
             );
+
+            /* =====================================
+               TEMP DEBUG:
+               Include the real MSG91 failure reason
+               in the response while you diagnose this.
+               REMOVE the debug field before going live
+               (don't leak provider errors to users).
+            ===================================== */
 
             return res.status(401).json({
                 message:
-                    "Phone verification failed. Please verify your phone number again."
+                    "Phone verification failed. Please verify your phone number again.",
+                debug:
+                    error.message
             });
 
         }

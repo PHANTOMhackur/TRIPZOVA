@@ -9,44 +9,77 @@ const {
     getMyVehicleById,
     addVehicle,
     updateVehicle,
-    deleteVehicle,
-    getPartnerDashboard
+    deleteVehicle
 } = require("../controllers/partnerController");
+
+const {
+    getPartnerDashboard
+} = require("../controllers/partnerDashboardController");
+
 
 const router = express.Router();
 
-// All partner routes require a logged-in user
+
+// =====================================================
+// AUTHENTICATION
+// =====================================================
+
 router.use(authMiddleware);
 
-// =====================================================
-// PARTNER PROFILE
-// =====================================================
-
-router.get("/profile", getMyProfile);
-
-router.put("/profile", updateMyProfile);
-
 
 // =====================================================
-// PARTNER VEHICLES
+// PARTNER DASHBOARD
 // =====================================================
 
-// Get all my vehicles
-router.get("/vehicles", getMyVehicles);
+router.get(
+    "/dashboard",
+    getPartnerDashboard
+);
 
-// Get one of my vehicles
-router.get("/vehicles/:id", getMyVehicleById);
 
-// Add vehicle
-router.post("/vehicles", addVehicle);
+// =====================================================
+// PROFILE
+// =====================================================
 
-// Update vehicle
-router.put("/vehicles/:id", updateVehicle);
+router.get(
+    "/profile",
+    getMyProfile
+);
 
-// Delete vehicle
-router.delete("/vehicles/:id", deleteVehicle);
+router.put(
+    "/profile",
+    updateMyProfile
+);
 
-router.get("/dashboard", getPartnerDashboard);
+
+// =====================================================
+// VEHICLES
+// =====================================================
+
+router.get(
+    "/vehicles",
+    getMyVehicles
+);
+
+router.get(
+    "/vehicles/:id",
+    getMyVehicleById
+);
+
+router.post(
+    "/vehicles",
+    addVehicle
+);
+
+router.put(
+    "/vehicles/:id",
+    updateVehicle
+);
+
+router.delete(
+    "/vehicles/:id",
+    deleteVehicle
+);
 
 
 module.exports = router;

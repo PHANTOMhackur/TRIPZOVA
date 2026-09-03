@@ -1487,11 +1487,59 @@ if (registerForm) {
                 if (!response.ok) {
 
                     showError(
-                        data.message ||
-                        "Unable to create your account."
+                        (data.message || "Unable to create your account.") +
+                        (data.debug ? " (" + data.debug + ")" : "")
                     );
 
                     resetAccountButton();
+
+
+                    /* -----------------------------------------
+                       IF PHONE VERIFICATION FAILED ON THE
+                       SERVER, THE MSG91 ACCESS TOKEN IS LIKELY
+                       ALREADY CONSUMED / EXPIRED.
+
+                       FORCE A FRESH OTP BEFORE THE USER
+                       CAN RETRY, INSTEAD OF LETTING THEM
+                       RESUBMIT THE SAME STALE TOKEN.
+                    ----------------------------------------- */
+
+                    if (
+                        data.message &&
+                        data.message.toLowerCase().includes("phone verification failed")
+                    ) {
+
+                        phoneVerified = false;
+                        msg91AccessToken = "";
+
+                        if (phoneInput) {
+                            phoneInput.readOnly = false;
+                        }
+
+                        if (otpInput) {
+                            otpInput.readOnly = false;
+                            otpInput.value = "";
+                        }
+
+                        if (sendOtpBtn) {
+                            sendOtpBtn.style.display = "";
+                            sendOtpBtn.disabled = false;
+                            sendOtpBtn.textContent = "Resend OTP";
+                        }
+
+                        if (verifyOtpBtn) {
+                            verifyOtpBtn.style.display = "";
+                            verifyOtpBtn.disabled = false;
+                            verifyOtpBtn.textContent = "Verify OTP";
+                        }
+
+                        if (otpStatus) {
+                            otpStatus.textContent =
+                                "Verification expired. Please request a new OTP.";
+                            otpStatus.className = "otp-status";
+                        }
+
+                    }
 
                     return;
 
