@@ -1,6 +1,7 @@
 const express = require("express");
 
 const authMiddleware = require("../middleware/authMiddleware");
+const partnerMiddleware = require("../middleware/partnerMiddleware");
 
 const {
     getMyProfile,
@@ -25,6 +26,7 @@ const router = express.Router();
 // =====================================================
 
 router.use(authMiddleware);
+router.use(partnerMiddleware);
 
 
 // =====================================================

@@ -167,6 +167,31 @@ function updateAuthenticationState() {
                 `Hi, ${name}`;
 
 
+            // Route the nav link to the right dashboard
+            // for this account's role (customer/partner/admin).
+            const dashboardLink =
+                document.getElementById("dashboardLink");
+
+            if (dashboardLink) {
+
+                if (user.role === "admin") {
+
+                    dashboardLink.href = "/admin/";
+                    dashboardLink.textContent = "Admin Panel";
+
+                } else if (user.role === "partner") {
+
+                    dashboardLink.href = "/partner/";
+                    dashboardLink.textContent = "Partner Panel";
+
+                } else {
+
+                    dashboardLink.href = "../customer-dashboard.html";
+                    dashboardLink.textContent = "My Bookings";
+                }
+            }
+
+
         } catch (error) {
 
             console.error(
@@ -225,205 +250,97 @@ if (logoutButton) {
 updateAuthenticationState();
 
 /* =========================================
-   BOOKING WIDGET
+   HOME SEARCH WIDGET
+
+   Step 1 of the booking flow. This form lives
+   only on the homepage - it collects pickup,
+   drop, date and traveller count, then sends
+   the person to the vehicle list page. Nobody
+   reaches booking.html without a vehicle first,
+   and nobody reaches the vehicle list without
+   searching first.
 ========================================= */
 
-const roundTripBtn = document.getElementById("roundTripBtn");
-const oneWayBtn = document.getElementById("oneWayBtn");
-const returnDateField = document.getElementById("returnDateField");
+const homeSearchForm =
+    document.getElementById("homeSearchForm");
 
-const journeyDate = document.getElementById("journeyDate");
-const returnDate = document.getElementById("returnDate");
+const searchFormMessage =
+    document.getElementById("searchFormMessage");
 
-const passengerButton = document.getElementById("passengerButton");
-const passengerMenu = document.getElementById("passengerMenu");
 
-const passengerText = document.getElementById("passengerText");
+if (homeSearchForm) {
 
-const adultCount = document.getElementById("adultCount");
-const kidCount = document.getElementById("kidCount");
+    // Journey date can't be in the past.
+    const searchDateInput =
+        document.getElementById("searchDate");
 
-const adultMinus = document.getElementById("adultMinus");
-const adultPlus = document.getElementById("adultPlus");
+    if (searchDateInput) {
 
-const kidMinus = document.getElementById("kidMinus");
-const kidPlus = document.getElementById("kidPlus");
+        const today =
+            new Date().toISOString().split("T")[0];
 
-const bookRideButton = document.getElementById("bookRideButton");
-const bookingMessage = document.getElementById("bookingMessage");
-
-let adults = 1;
-let kids = 0;
-
-
-/* Trip type */
-
-roundTripBtn.addEventListener("click", () => {
-
-    roundTripBtn.classList.add("active");
-    oneWayBtn.classList.remove("active");
-
-    returnDateField.style.display = "block";
-});
-
-
-oneWayBtn.addEventListener("click", () => {
-
-    oneWayBtn.classList.add("active");
-    roundTripBtn.classList.remove("active");
-
-    returnDateField.style.display = "none";
-
-    returnDate.value = "";
-});
-
-
-/* Passenger menu */
-
-passengerButton.addEventListener("click", (event) => {
-
-    event.stopPropagation();
-
-    passengerMenu.classList.toggle("show");
-
-});
-
-
-document.addEventListener("click", (event) => {
-
-    if (
-        !passengerMenu.contains(event.target) &&
-        !passengerButton.contains(event.target)
-    ) {
-        passengerMenu.classList.remove("show");
-    }
-
-});
-
-
-/* Passenger count */
-
-function updatePassengers() {
-
-    adultCount.textContent = adults;
-    kidCount.textContent = kids;
-
-    passengerText.textContent =
-        `${adults} Adult${adults !== 1 ? "s" : ""}, ` +
-        `${kids} Kid${kids !== 1 ? "s" : ""}`;
-}
-
-
-adultMinus.addEventListener("click", () => {
-
-    if (adults > 1) {
-        adults--;
-        updatePassengers();
-    }
-
-});
-
-
-adultPlus.addEventListener("click", () => {
-
-    adults++;
-    updatePassengers();
-
-});
-
-
-kidMinus.addEventListener("click", () => {
-
-    if (kids > 0) {
-        kids--;
-        updatePassengers();
-    }
-
-});
-
-
-kidPlus.addEventListener("click", () => {
-
-    kids++;
-    updatePassengers();
-
-});
-
-
-/* Minimum journey date */
-
-const today = new Date().toISOString().split("T")[0];
-
-journeyDate.min = today;
-returnDate.min = today;
-
-
-/* Journey date changes */
-
-journeyDate.addEventListener("change", () => {
-
-    returnDate.min = journeyDate.value;
-
-});
-
-
-/* Book */
-
-bookRideButton.addEventListener("click", () => {
-
-    const pickup =
-        document.getElementById("pickupInput").value.trim();
-
-    const drop =
-        document.getElementById("dropInput").value.trim();
-
-    const flight =
-        document.getElementById("flightNumber").value.trim();
-
-    const journey =
-        journeyDate.value;
-
-    const returnDateValue =
-        returnDate.value;
-
-
-    if (!pickup || !drop || !journey) {
-
-        bookingMessage.textContent =
-            "Please enter pickup, drop location and journey date.";
-
-        return;
+        searchDateInput.min = today;
     }
 
 
-    if (
-        roundTripBtn.classList.contains("active") &&
-        !returnDateValue
-    ) {
+    homeSearchForm.addEventListener("submit", (event) => {
 
-        bookingMessage.textContent =
-            "Please select a return date.";
+        event.preventDefault();
 
-        return;
-    }
+        const pickup =
+            document.getElementById("searchPickup")
+                ?.value.trim() || "";
+
+        const drop =
+            document.getElementById("searchDrop")
+                ?.value.trim() || "";
+
+        const travelDate =
+            document.getElementById("searchDate")
+                ?.value || "";
+
+        const members =
+            Number(
+                document.getElementById("searchMembers")
+                    ?.value || 1
+            );
 
 
-    bookingMessage.textContent =
-        "Booking details are ready.";
+        if (!pickup || !drop || !travelDate) {
 
-    console.log({
-        tripType:
-            roundTripBtn.classList.contains("active")
-                ? "round-trip"
-                : "one-way",
+            if (searchFormMessage) {
 
-        pickup,
-        drop,
-        flight,
-        journeyDate: journey,
-        returnDate: returnDateValue,
-        adults,
-        kids
+                searchFormMessage.textContent =
+                    "Please enter pickup, destination and journey date.";
+            }
+
+            return;
+        }
+
+
+        if (searchFormMessage) {
+            searchFormMessage.textContent = "";
+        }
+
+
+        const params = new URLSearchParams();
+
+        params.set("pickup", pickup);
+        params.set("drop", drop);
+        params.set("destination", drop);
+        params.set("travelDate", travelDate);
+        params.set(
+            "members",
+            String(
+                Number.isFinite(members) && members > 0
+                    ? members
+                    : 1
+            )
+        );
+
+
+        window.location.href =
+            `../vehicle-list.html?${params.toString()}`;
     });
 
-});
+}

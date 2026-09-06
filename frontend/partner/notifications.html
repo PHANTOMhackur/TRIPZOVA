@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Notifications | TRIPZOVA Partner</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <!-- Partner CSS -->
+    <link
+        rel="stylesheet"
+        href="css/partner.css"
+    >
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         MOBILE OVERLAY
+    ====================================================== -->
+
+    <div
+        class="partner-sidebar-overlay"
+        id="partnerSidebarOverlay"
+    ></div>
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside
+        class="partner-sidebar"
+        id="partnerSidebar"
+    >
+
+        <!-- BRAND -->
+
+        <a
+            href="index.html"
+            class="partner-brand"
+        >
+
+            <div class="partner-brand-logo">
+                T
+            </div>
+
+            <div>
+                <div class="partner-brand-name">
+                    TRIPZOVA
+                </div>
+
+                <span class="partner-brand-subtitle">
+                    PARTNER PANEL
+                </span>
+            </div>
+
+        </a>
+
+
+        <!-- SIDEBAR CONTENT -->
+
+        <div class="partner-sidebar-content">
+
+            <nav class="partner-sidebar-menu">
+
+
+                <!-- MAIN -->
+
+                <div class="partner-menu-section">
+
+                    <div class="partner-menu-title">
+                        MAIN
+                    </div>
+
+                    <a
+                        href="index.html"
+                        class="partner-nav-link"
+                    >
+                        <i class="bi bi-grid-1x2"></i>
+
+                        <span>
+                            Dashboard
+                        </span>
+                    </a>
+
+                </div>
+
+
+                <!-- PROFILE & VEHICLES -->
+
+                <div class="partner-menu-section">
+
+                    <div class="partner-menu-title">
+                        PROFILE & VEHICLES
+                    </div>
+
+
+                    <a
+                        href="profile.html"
+                        class="partner-nav-link"
+                    >
+                        <i class="bi bi-person"></i>
+
+                        <span>
+                            My Profile
+                        </span>
+                    </a>
+
+
+                    <a
+                        href="vehicles.html"
+                        class="partner-nav-link"
+                    >
+                        <i class="bi bi-car-front"></i>
+
+                        <span>
+                            My Vehicles
+                        </span>
+                    </a>
+
+
+                    <a
+                        href="add-vehicle.html"
+                        class="partner-nav-link"
+                    >
+                        <i class="bi bi-plus-square"></i>
+
+                        <span>
+                            Add Vehicle
+                        </span>
+                    </a>
+
+                </div>
+
+
+                <!-- BOOKINGS -->
+
+                <div class="partner-menu-section">
+
+                    <div class="partner-menu-title">
+                        BOOKINGS
+                    </div>
+
+
+                    <a
+                        href="bookings.html"
+                        class="partner-nav-link"
+                    >
+
+                        <i class="bi bi-calendar-check"></i>
+
+                        <span>
+                            Booking Requests
+                        </span>
+
+                        <span
+                            class="partner-nav-badge"
+                            id="partnerPendingBookingBadge"
+                            style="display:none;"
+                        >
+                            0
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="customers.html"
+                        class="partner-nav-link"
+                    >
+
+                        <i class="bi bi-people"></i>
+
+                        <span>
+                            Customers
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <!-- FINANCE -->
+
+                <div class="partner-menu-section">
+
+                    <div class="partner-menu-title">
+                        FINANCE
+                    </div>
+
+
+                    <a
+                        href="earnings.html"
+                        class="partner-nav-link"
+                    >
+
+                        <i class="bi bi-wallet2"></i>
+
+                        <span>
+                            Earnings
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <!-- MANAGEMENT -->
+
+                <div class="partner-menu-section">
+
+                    <div class="partner-menu-title">
+                        MANAGEMENT
+                    </div>
+
+
+                    <a
+                        href="reviews.html"
+                        class="partner-nav-link"
+                    >
+
+                        <i class="bi bi-star"></i>
+
+                        <span>
+                            Reviews
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="notifications.html"
+                        class="partner-nav-link"
+                    >
+
+                        <i class="bi bi-bell"></i>
+
+                        <span>
+                            Notifications
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="settings.html"
+                        class="partner-nav-link"
+                    >
+
+                        <i class="bi bi-gear"></i>
+
+                        <span>
+                            Settings
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </nav>
+
+        </div>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="partner-sidebar-bottom">
+
+            <button
+                type="button"
+                class="partner-logout-btn"
+                id="partnerLogoutBtn"
+            >
+
+                <i class="bi bi-box-arrow-right"></i>
+
+                <span>
+                    Logout
+                </span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="partner-main">
+
+
+        <!-- =================================================
+             NAVBAR
+        ================================================== -->
+
+        <header class="partner-navbar">
+
+
+            <div class="partner-navbar-left">
+
+                <button
+                    type="button"
+                    class="partner-menu-toggle"
+                    id="partnerMobileMenuBtn"
+                >
+
+                    <i class="bi bi-list"></i>
+
+                </button>
+
+
+                <div class="partner-navbar-page-title">
+
+                    <span>
+                        Notifications
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- NAVBAR RIGHT -->
+
+            <div class="partner-navbar-right">
+
+
+                <!-- NOTIFICATIONS -->
+
+                <button
+                    type="button"
+                    class="partner-notification-btn"
+                    title="Notifications"
+                    onclick="window.location.href='notifications.html'"
+                >
+
+                    <i class="bi bi-bell"></i>
+
+                    <span class="partner-notification-dot"></span>
+
+                </button>
+
+
+                <!-- PROFILE -->
+
+                <div
+                    class="partner-navbar-profile"
+                    id="partnerNavbarProfile"
+                >
+
+                    <div
+                        class="partner-navbar-avatar"
+                        id="partnerNavbarAvatar"
+                    >
+                        <span>
+                            P
+                        </span>
+                    </div>
+
+
+                    <div class="partner-navbar-profile-info">
+
+                        <strong id="partnerNavbarName">
+                            Partner
+                        </strong>
+
+                        <small>
+                            Partner
+                        </small>
+
+                    </div>
+
+                    <i class="bi bi-chevron-down"></i>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             CONTENT
+        ================================================== -->
+
+        <div class="partner-content">
+
+
+            <!-- APPROVAL ALERT (shared logic in partner.js) -->
+
+            <div
+                class="partner-alert partner-alert-info mb-4"
+                id="partnerApprovalAlert"
+                style="display: none;"
+            >
+
+                <i class="bi bi-info-circle me-1"></i>
+
+                <span id="partnerApprovalMessage">
+                    Your partner account status will appear here.
+                </span>
+
+            </div>
+
+
+            <!-- PAGE HEADER -->
+
+            <div class="partner-page-header">
+
+                <div>
+
+                    <h1>
+                        Notifications
+                    </h1>
+
+                    <p>
+                        Recent activity on your bookings and vehicles.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ERROR -->
+
+            <div
+                id="notificationsError"
+                style="display:none;"
+            ></div>
+
+
+
+            <!-- LOADING -->
+
+            <div id="notificationsLoading" class="partner-card">
+                <div class="partner-loading">
+                    <div class="partner-spinner"></div>
+                    <span>Loading notifications...</span>
+                </div>
+            </div>
+
+
+
+            <!-- NOTIFICATIONS LIST -->
+
+            <div class="partner-card" id="notificationsCard" style="display:none;">
+
+                <div class="partner-card-header">
+                    <div>
+                        <h4>Recent Activity</h4>
+                        <p>
+                            Generated from your recent booking activity -
+                            live notifications aren't wired up yet.
+                        </p>
+                    </div>
+                </div>
+
+                <div id="notificationsList" class="notification-list"></div>
+
+            </div>
+
+
+
+            <!-- EMPTY -->
+
+            <div id="notificationsEmpty" class="partner-card" style="display:none;">
+                <div class="partner-empty-state">
+                    <div class="partner-empty-icon">
+                        <i class="bi bi-bell"></i>
+                    </div>
+                    <h5>Nothing to show yet</h5>
+                    <p>Booking activity will appear here as it happens.</p>
+                </div>
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
+
+
+    <!-- Common Partner JS -->
+
+    <script src="js/partner.js"></script>
+
+
+    <!-- Page JS -->
+
+    <script src="js/notifications.js"></script>
+
+
+</body>
+
+</html>

@@ -408,6 +408,42 @@ function displayPhone(phone) {
 
 
 /* =====================================================
+   RESEND / COOLDOWN STATE
+===================================================== */
+
+let otpAlreadySent = false;
+let resendCooldownTimer = null;
+
+function startResendCooldown(seconds) {
+
+    let remaining = seconds;
+
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.textContent = "Resend OTP (" + remaining + "s)";
+
+    clearInterval(resendCooldownTimer);
+
+    resendCooldownTimer = setInterval(function () {
+
+        remaining--;
+
+        if (remaining <= 0) {
+
+            clearInterval(resendCooldownTimer);
+            sendOtpBtn.disabled = false;
+            sendOtpBtn.textContent = "Resend OTP";
+            return;
+
+        }
+
+        sendOtpBtn.textContent = "Resend OTP (" + remaining + "s)";
+
+    }, 1000);
+
+}
+
+
+/* =====================================================
    SEND OTP
 ===================================================== */
 
@@ -488,6 +524,89 @@ if (sendOtpBtn) {
 
                 showError(
                     "Phone verification service is still loading. Please wait a moment and try again."
+                );
+
+                return;
+
+            }
+
+
+            /* -----------------------------------------
+               RESEND on an already-active session
+               must use retryOtp(), not sendOtp()
+               again - sendOtp() will not reliably
+               trigger a fresh SMS for the same
+               identifier while a session is open.
+            ----------------------------------------- */
+
+            if (
+                otpAlreadySent &&
+                phone === otpPhoneNumber &&
+                typeof window.retryOtp === "function"
+            ) {
+
+                otpRequestInProgress = true;
+
+                sendOtpBtn.disabled = true;
+                sendOtpBtn.textContent = "Sending...";
+
+                window.retryOtp(
+
+                    11, /* 11 = resend via text SMS */
+
+                    function (data) {
+
+                        console.log(
+                            "MSG91 OTP resent:",
+                            data
+                        );
+
+                        otpRequestInProgress = false;
+
+                        phoneVerified = false;
+                        msg91AccessToken = "";
+
+                        if (otpGroup) {
+                            otpGroup.style.display = "block";
+                        }
+
+                        if (otpInput) {
+                            otpInput.value = "";
+                            otpInput.focus();
+                        }
+
+                        if (otpStatus) {
+                            otpStatus.textContent = "OTP resent successfully.";
+                            otpStatus.className = "otp-status success";
+                        }
+
+                        startResendCooldown(30);
+
+                        showSuccess(
+                            "OTP resent successfully to " +
+                            displayPhone(phone)
+                        );
+
+                    },
+
+                    function (error) {
+
+                        console.error(
+                            "MSG91 Retry OTP error:",
+                            error
+                        );
+
+                        otpRequestInProgress = false;
+
+                        sendOtpBtn.disabled = false;
+                        sendOtpBtn.textContent = "Resend OTP";
+
+                        showError(
+                            getMSG91Error(error)
+                        );
+
+                    }
+
                 );
 
                 return;
@@ -593,12 +712,10 @@ if (sendOtpBtn) {
                            BUTTON
                         ------------------------- */
 
-                        sendOtpBtn.textContent =
-                            "Resend OTP";
+                        otpAlreadySent =
+                            true;
 
-
-                        sendOtpBtn.disabled =
-                            false;
+                        startResendCooldown(30);
 
 
                         showSuccess(

@@ -353,6 +353,42 @@ function extractAccessToken(data) {
 
 
 /* =========================================
+   RESEND / COOLDOWN STATE
+========================================= */
+
+let loginOtpAlreadySent = false;
+let loginResendCooldownTimer = null;
+
+function startLoginResendCooldown(seconds) {
+
+    let remaining = seconds;
+
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.textContent = "Resend OTP (" + remaining + "s)";
+
+    clearInterval(loginResendCooldownTimer);
+
+    loginResendCooldownTimer = setInterval(function () {
+
+        remaining--;
+
+        if (remaining <= 0) {
+
+            clearInterval(loginResendCooldownTimer);
+            sendOtpBtn.disabled = false;
+            sendOtpBtn.textContent = "Resend OTP";
+            return;
+
+        }
+
+        sendOtpBtn.textContent = "Resend OTP (" + remaining + "s)";
+
+    }, 1000);
+
+}
+
+
+/* =========================================
    SEND OTP
 ========================================= */
 
@@ -415,6 +451,69 @@ if (sendOtpBtn) {
 
 
             /*
+               RESEND on an already-active session
+               must use retryOtp(), not sendOtp()
+               again - sendOtp() will not reliably
+               trigger a fresh SMS for the same
+               identifier while a session is open.
+            */
+
+            if (
+                loginOtpAlreadySent &&
+                msg91Phone === loginOtpPhoneNumber &&
+                typeof window.retryOtp === "function"
+            ) {
+
+                window.retryOtp(
+
+                    11, /* 11 = resend via text SMS */
+
+                    function (data) {
+
+                        console.log(
+                            "MSG91 OTP resent:",
+                            data
+                        );
+
+                        loginPhoneVerified = false;
+                        loginMsg91AccessToken = null;
+
+                        otpGroup.style.display = "block";
+
+                        setOtpStatus(
+                            "OTP resent successfully. Check your phone.",
+                            "success"
+                        );
+
+                        startLoginResendCooldown(30);
+
+                    },
+
+                    function (error) {
+
+                        console.error(
+                            "MSG91 Retry OTP error:",
+                            error
+                        );
+
+                        setOtpStatus(
+                            "Unable to resend OTP. Please try again.",
+                            "error"
+                        );
+
+                        sendOtpBtn.disabled = false;
+                        sendOtpBtn.textContent = "Resend OTP";
+
+                    }
+
+                );
+
+                return;
+
+            }
+
+
+            /*
                Save phone number.
             */
 
@@ -459,11 +558,11 @@ if (sendOtpBtn) {
                     );
 
 
-                    sendOtpBtn.disabled =
-                        false;
+                    loginOtpAlreadySent =
+                        true;
 
-                    sendOtpBtn.textContent =
-                        "Resend OTP";
+
+                    startLoginResendCooldown(30);
 
                 },
 
@@ -1082,12 +1181,63 @@ if (loginForm) {
    REDIRECT AFTER LOGIN
 ========================================= */
 
+/*
+   Only allow redirecting back to a path that
+   belongs to TRIPZOVA itself (e.g. "/booking.html?...").
+
+   Without this check, a link like:
+       login.html?redirect=https://evil-site.com
+   or
+       login.html?redirect=//evil-site.com
+   would send a person who just typed in their
+   password straight to an attacker's site
+   (a classic "open redirect" phishing trick).
+*/
+function getSafeRedirect(value) {
+
+    if (!value) {
+        return null;
+    }
+
+    // Must start with a single "/" (a same-site path)
+    // and must NOT start with "//" or "/\" which browsers
+    // treat as protocol-relative URLs to another host.
+    if (
+        !value.startsWith("/") ||
+        value.startsWith("//") ||
+        value.startsWith("/\\")
+    ) {
+        return null;
+    }
+
+    try {
+
+        // Resolve against our own origin - if it resolves
+        // to a different host, reject it.
+        const resolved =
+            new URL(value, window.location.origin);
+
+        if (resolved.origin !== window.location.origin) {
+            return null;
+        }
+
+        return resolved.pathname + resolved.search + resolved.hash;
+
+    } catch (error) {
+
+        return null;
+    }
+}
+
+
 function redirectAfterLogin(user) {
 
     const redirect =
-        new URLSearchParams(
-            window.location.search
-        ).get("redirect");
+        getSafeRedirect(
+            new URLSearchParams(
+                window.location.search
+            ).get("redirect")
+        );
 
 
     setTimeout(() => {

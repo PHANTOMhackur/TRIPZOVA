@@ -5,9 +5,75 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    if (!enforceAdminAccess()) {
+        return;
+    }
+
     initializeAdmin();
 
 });
+
+
+/* =========================================================
+   ACCESS GUARD
+
+   Runs before anything else renders. This is a UX guard so
+   a customer or partner who types /admin/ in the address bar
+   doesn't see the admin shell at all - real protection is
+   still enforced server-side by adminMiddleware on every
+   /api/admin/* call, since a client-side check alone can
+   always be bypassed by someone editing localStorage.
+========================================================= */
+
+function enforceAdminAccess() {
+
+    const token =
+        localStorage.getItem("tripzovaToken");
+
+    if (!token) {
+
+        const returnTo =
+            encodeURIComponent(
+                window.location.pathname +
+                window.location.search
+            );
+
+        window.location.replace(
+            `../login.html?redirect=${returnTo}`
+        );
+
+        return false;
+    }
+
+
+    let user = null;
+
+    try {
+
+        const storedUser =
+            localStorage.getItem("tripzovaUser");
+
+        user =
+            storedUser
+                ? JSON.parse(storedUser)
+                : null;
+
+    } catch (error) {
+
+        user = null;
+    }
+
+
+    if (!user || user.role !== "admin") {
+
+        window.location.replace("/user/");
+
+        return false;
+    }
+
+
+    return true;
+}
 
 
 /* =========================================================
@@ -38,7 +104,7 @@ function setupSidebar() {
         document.getElementById("sidebarOverlay");
 
     const mobileButton =
-        document.getElementById("mobileMenuButton");
+        document.getElementById("mobileMenuBtn");
 
     const closeButton =
         document.getElementById("sidebarClose");
@@ -490,6 +556,7 @@ function getStatusClass(status) {
         case "active":
         case "completed":
         case "success":
+        case "paid":
             return "status-approved";
 
 
@@ -502,6 +569,7 @@ function getStatusClass(status) {
         case "blocked":
         case "cancelled":
         case "failed":
+        case "refunded":
             return "status-rejected";
 
 

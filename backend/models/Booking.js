@@ -21,6 +21,12 @@ const bookingSchema = new mongoose.Schema(
             default: null
         },
 
+        vehicle: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Vehicle",
+            default: null
+        },
+
         serviceType: {
             type: String,
             enum: ["tour", "ride"],
@@ -33,9 +39,44 @@ const bookingSchema = new mongoose.Schema(
             trim: true
         },
 
+        tripType: {
+            type: String,
+            enum: ["one_way", "round_trip"],
+            default: "one_way"
+        },
+
+        pickup: {
+            type: String,
+            trim: true,
+            default: ""
+        },
+
+        drop: {
+            type: String,
+            trim: true,
+            default: ""
+        },
+
         travelDate: {
             type: Date,
             required: true
+        },
+
+        returnDate: {
+            type: Date,
+            default: null
+        },
+
+        pickupTime: {
+            type: String,
+            trim: true,
+            default: ""
+        },
+
+        flightNumber: {
+            type: String,
+            trim: true,
+            default: ""
         },
 
         guests: {
@@ -44,10 +85,48 @@ const bookingSchema = new mongoose.Schema(
             min: 1
         },
 
+        distanceKm: {
+            type: Number,
+            min: 0,
+            default: 0
+        },
+
         amount: {
             type: Number,
             default: 0,
             min: 0
+        },
+
+        pricing: {
+            pricePerKm: {
+                type: Number,
+                min: 0,
+                default: 0
+            },
+
+            minimumKm: {
+                type: Number,
+                min: 0,
+                default: 0
+            },
+
+            billableKm: {
+                type: Number,
+                min: 0,
+                default: 0
+            },
+
+            driverAllowance: {
+                type: Number,
+                min: 0,
+                default: 0
+            },
+
+            extraCharges: {
+                type: Number,
+                min: 0,
+                default: 0
+            }
         },
 
         paymentMethod: {
@@ -106,5 +185,11 @@ const bookingSchema = new mongoose.Schema(
         timestamps: true
     }
 );
+
+bookingSchema.index({ customer: 1 });
+bookingSchema.index({ partner: 1 });
+bookingSchema.index({ vehicle: 1 });
+bookingSchema.index({ bookingStatus: 1 });
+bookingSchema.index({ travelDate: 1 });
 
 module.exports = mongoose.model("Booking", bookingSchema);

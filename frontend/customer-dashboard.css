@@ -1,0 +1,266 @@
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7f7;
+    color: #202633;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* =========================================
+   TOPBAR
+========================================= */
+
+.dash-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 16px 28px;
+
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dash-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: #172033;
+}
+
+.dash-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.dash-back-link {
+    font-size: 14px;
+    color: #39b9ad;
+    font-weight: 600;
+}
+
+.dash-logout-btn {
+    padding: 9px 18px;
+    border-radius: 999px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.dash-logout-btn:hover {
+    background: #f6f9f8;
+}
+
+
+/* =========================================
+   PAGE
+========================================= */
+
+.dash-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+}
+
+.dash-greeting {
+    font-size: 26px;
+    margin-bottom: 4px;
+}
+
+.dash-subtitle {
+    color: #6b7280;
+    margin-bottom: 28px;
+}
+
+
+/* =========================================
+   STATS
+========================================= */
+
+.dash-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.dash-stat-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 18px;
+}
+
+.dash-stat-value {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.dash-stat-label {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+
+/* =========================================
+   SECTION HEADER
+========================================= */
+
+.dash-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.dash-section-header h2 {
+    font-size: 18px;
+}
+
+.dash-new-booking-btn {
+    background: #39b9ad;
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.dash-new-booking-btn:hover {
+    background: #2ca297;
+}
+
+
+/* =========================================
+   BOOKING CARDS
+========================================= */
+
+.dash-bookings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.dash-booking-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 18px;
+
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.dash-booking-main strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.dash-booking-route {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 6px;
+}
+
+.dash-booking-meta {
+    font-size: 12px;
+    color: #6b7280;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.dash-booking-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    min-width: 130px;
+}
+
+.dash-status {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    text-transform: capitalize;
+}
+
+.dash-status-pending { background: #fff4e0; color: #b06a00; }
+.dash-status-confirmed { background: #e5f4ff; color: #1467c9; }
+.dash-status-completed { background: #e6f7ef; color: #1a8a51; }
+.dash-status-cancelled,
+.dash-status-rejected { background: #fdeaea; color: #c53030; }
+
+.dash-cancel-btn {
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #c53030;
+}
+
+.dash-cancel-btn:hover {
+    background: #fdeaea;
+}
+
+.dash-cancel-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   EMPTY / LOADING / ERROR STATES
+========================================= */
+
+.dash-empty,
+.dash-loading,
+.dash-error {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.dash-error {
+    color: #c53030;
+}
+
+
+@media (max-width: 640px) {
+
+    .dash-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .dash-booking-side {
+        align-items: flex-start;
+    }
+
+}

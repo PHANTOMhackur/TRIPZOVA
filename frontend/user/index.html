@@ -77,6 +77,10 @@
 
                 <span id="userGreeting"></span>
 
+                <a href="../customer-dashboard.html" id="dashboardLink" class="btn-signin">
+                    My Bookings
+                </a>
+
                 <button
                     type="button"
                     id="logoutButton"
@@ -138,7 +142,7 @@
                     <div class="hero-buttons">
 
                         <a
-                            href="../booking.html"
+                            href="#searchWidget"
                             class="btn-primary"
                         >
                             Book Now
@@ -176,6 +180,115 @@
                     </div>
 
                 </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 SEARCH WIDGET
+                 Step 1 of the booking flow: the person picks a
+                 destination / route here first. Submitting this
+                 form takes them to the vehicle list page - they
+                 never land on the vehicle-selection or checkout
+                 pages "cold".
+            ================================================== -->
+
+            <div
+                class="search-widget"
+                id="searchWidget"
+            >
+
+                <form
+                    id="homeSearchForm"
+                    class="search-widget-form"
+                >
+
+                    <div class="search-field">
+
+                        <label for="searchPickup">
+                            Pickup From
+                        </label>
+
+                        <input
+                            type="text"
+                            id="searchPickup"
+                            name="pickup"
+                            placeholder="City or address"
+                            autocomplete="off"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="search-field">
+
+                        <label for="searchDrop">
+                            Going To
+                        </label>
+
+                        <input
+                            type="text"
+                            id="searchDrop"
+                            name="drop"
+                            placeholder="Destination"
+                            autocomplete="off"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="search-field">
+
+                        <label for="searchDate">
+                            Journey Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="searchDate"
+                            name="travelDate"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="search-field">
+
+                        <label for="searchMembers">
+                            Travellers
+                        </label>
+
+                        <input
+                            type="number"
+                            id="searchMembers"
+                            name="members"
+                            min="1"
+                            max="50"
+                            value="1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn-primary search-submit"
+                        id="searchSubmitButton"
+                    >
+                        Search Vehicles
+                    </button>
+
+
+                    <p
+                        id="searchFormMessage"
+                        class="search-widget-message"
+                    ></p>
+
+                </form>
 
             </div>
 
@@ -228,7 +341,7 @@
                             your journey and preferences.
                         </p>
 
-                        <a href="../login.html">
+                        <a href="#searchWidget">
                             Explore →
                         </a>
 
@@ -250,7 +363,7 @@
                             destination with TRIPZOVA.
                         </p>
 
-                        <a href="../login.html">
+                        <a href="#searchWidget">
                             Plan Trip →
                         </a>
 
@@ -272,7 +385,7 @@
                             travel business.
                         </p>
 
-                        <a href="../partner-login.html">
+                        <a href="../register.html?mode=partner">
                             Join Us →
                         </a>
 

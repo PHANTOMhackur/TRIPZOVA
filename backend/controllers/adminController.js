@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Booking = require("../models/Booking");
+const Vehicle = require("../models/Vehicle");
 
 
 /* =========================================================
@@ -1068,5 +1069,242 @@ module.exports = {
 
     getBookings,
     getBookingById,
-    updateBookingStatus
+    updateBookingStatus,
+
+    getVehicles,
+    getVehicleById,
+    approveVehicle,
+    rejectVehicle,
+    setVehicleStatus
 };
+
+
+/* =========================================================
+   GET ALL VEHICLES (across every partner)
+========================================================= */
+
+async function getVehicles(req, res) {
+
+    try {
+
+        const {
+            approval,
+            status,
+            search
+        } = req.query;
+
+        const query = {};
+
+        if (
+            approval &&
+            ["pending", "approved", "rejected"].includes(approval)
+        ) {
+            query.adminApproval = approval;
+        }
+
+        if (
+            status &&
+            ["active", "inactive", "pending", "rejected"].includes(status)
+        ) {
+            query.vehicleStatus = status;
+        }
+
+        if (search && search.trim()) {
+
+            const searchValue = search.trim();
+
+            query.$or = [
+                { vehicleName: { $regex: searchValue, $options: "i" } },
+                { vehicleNumber: { $regex: searchValue, $options: "i" } },
+                { brand: { $regex: searchValue, $options: "i" } },
+                { model: { $regex: searchValue, $options: "i" } }
+            ];
+        }
+
+        const vehicles = await Vehicle.find(query)
+            .populate(
+                "partner",
+                "firstName lastName email phone city partnerStatus"
+            )
+            .sort({ createdAt: -1 })
+            .lean();
+
+        return res.json({
+            success: true,
+            count: vehicles.length,
+            vehicles
+        });
+
+    } catch (error) {
+
+        console.error("Get vehicles error:", error);
+
+        return res.status(500).json({
+            message: "Failed to load vehicles."
+        });
+    }
+}
+
+
+/* =========================================================
+   GET SINGLE VEHICLE
+========================================================= */
+
+async function getVehicleById(req, res) {
+
+    try {
+
+        const vehicle = await Vehicle.findById(req.params.id)
+            .populate(
+                "partner",
+                "firstName lastName email phone city partnerStatus"
+            );
+
+        if (!vehicle) {
+            return res.status(404).json({
+                message: "Vehicle not found."
+            });
+        }
+
+        return res.json({
+            success: true,
+            vehicle
+        });
+
+    } catch (error) {
+
+        console.error("Get vehicle error:", error);
+
+        return res.status(500).json({
+            message: "Failed to load vehicle."
+        });
+    }
+}
+
+
+/* =========================================================
+   APPROVE VEHICLE
+========================================================= */
+
+async function approveVehicle(req, res) {
+
+    try {
+
+        const vehicle = await Vehicle.findById(req.params.id);
+
+        if (!vehicle) {
+            return res.status(404).json({
+                message: "Vehicle not found."
+            });
+        }
+
+        vehicle.adminApproval = "approved";
+        vehicle.vehicleStatus = "active";
+
+        await vehicle.save();
+
+        return res.json({
+            success: true,
+            message: "Vehicle approved and is now live.",
+            vehicle
+        });
+
+    } catch (error) {
+
+        console.error("Approve vehicle error:", error);
+
+        return res.status(500).json({
+            message: "Failed to approve vehicle."
+        });
+    }
+}
+
+
+/* =========================================================
+   REJECT VEHICLE
+========================================================= */
+
+async function rejectVehicle(req, res) {
+
+    try {
+
+        const vehicle = await Vehicle.findById(req.params.id);
+
+        if (!vehicle) {
+            return res.status(404).json({
+                message: "Vehicle not found."
+            });
+        }
+
+        vehicle.adminApproval = "rejected";
+        vehicle.vehicleStatus = "rejected";
+
+        await vehicle.save();
+
+        return res.json({
+            success: true,
+            message: "Vehicle listing rejected.",
+            vehicle
+        });
+
+    } catch (error) {
+
+        console.error("Reject vehicle error:", error);
+
+        return res.status(500).json({
+            message: "Failed to reject vehicle."
+        });
+    }
+}
+
+
+/* =========================================================
+   ACTIVATE / DEACTIVATE AN ALREADY-APPROVED VEHICLE
+========================================================= */
+
+async function setVehicleStatus(req, res) {
+
+    try {
+
+        const { status } = req.body;
+
+        if (!["active", "inactive"].includes(status)) {
+            return res.status(400).json({
+                message: "Status must be 'active' or 'inactive'."
+            });
+        }
+
+        const vehicle = await Vehicle.findById(req.params.id);
+
+        if (!vehicle) {
+            return res.status(404).json({
+                message: "Vehicle not found."
+            });
+        }
+
+        if (vehicle.adminApproval !== "approved") {
+            return res.status(400).json({
+                message:
+                    "Only an approved vehicle's active status can be changed."
+            });
+        }
+
+        vehicle.vehicleStatus = status;
+
+        await vehicle.save();
+
+        return res.json({
+            success: true,
+            message: `Vehicle marked as ${status}.`,
+            vehicle
+        });
+
+    } catch (error) {
+
+        console.error("Set vehicle status error:", error);
+
+        return res.status(500).json({
+            message: "Failed to update vehicle status."
+        });
+    }
+}

@@ -1,6 +1,6 @@
 // =========================================
 // TRIPZOVA BOOKING.JS
-// COMPLETE VERSION
+// COMPLETE BOOKING + GOOGLE MAPS VERSION
 // =========================================
 
 let map = null;
@@ -23,6 +23,38 @@ let pickerGeocoder = null;
 let pickerType = null;
 let pickerLocation = null;
 
+// Selected vehicle
+let selectedVehicle = null;
+
+// Route distance in KM
+let routeDistanceKm = 0;
+
+
+// =========================================
+// URL PARAMETERS
+// =========================================
+
+const bookingParams =
+    new URLSearchParams(window.location.search);
+
+const vehicleId =
+    bookingParams.get("vehicleId");
+
+const destinationParam =
+    bookingParams.get("destination") || "";
+
+const membersParam =
+    Number(bookingParams.get("members") || 1);
+
+const travelDateParam =
+    bookingParams.get("travelDate") || "";
+
+const pickupParam =
+    bookingParams.get("pickup") || "";
+
+const dropParam =
+    bookingParams.get("drop") || "";
+
 
 // =========================================
 // GOOGLE MAP INITIALIZATION
@@ -38,12 +70,10 @@ function initBookingMap() {
         return;
     }
 
-
     const defaultLocation = {
         lat: 21.1702,
         lng: 72.8311
     };
-
 
     // Main map
     map = new google.maps.Map(
@@ -57,7 +87,6 @@ function initBookingMap() {
             fullscreenControl: true
         }
     );
-
 
     // Services
     directionsService =
@@ -75,38 +104,214 @@ function initBookingMap() {
             }
         });
 
-
     geocoder =
         new google.maps.Geocoder();
 
-
-    // =====================================
-    // GOOGLE AUTOCOMPLETE
-    // =====================================
-
+    // Google autocomplete
     setupAutocomplete();
 
-
-    // =====================================
-    // LOCATION MENUS
-    // =====================================
-
+    // Location menus
     setupLocationMenus();
 
-
-    // =====================================
-    // OTHER CONTROLS
-    // =====================================
-
+    // Other controls
     setupTripType();
     setupPassengers();
     setupDates();
     setupBookingButton();
 
+    // Load vehicle after page/map initialization
+    loadSelectedVehicle();
 
     console.log(
         "TRIPZOVA Google Maps initialized"
     );
+}
+
+
+// =========================================
+// LOAD SELECTED VEHICLE
+// =========================================
+
+async function loadSelectedVehicle() {
+
+    if (!vehicleId) {
+
+        console.warn(
+            "No vehicleId found in booking URL."
+        );
+
+        setElementText(
+            "bookingVehicleName",
+            "No vehicle selected"
+        );
+
+        showBookingMessage(
+            "No vehicle was selected. Please go back and choose a vehicle first."
+        );
+
+        const bookButtonMissing =
+            document.getElementById("bookRideButton");
+
+        if (bookButtonMissing) {
+            bookButtonMissing.disabled = true;
+        }
+
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/vehicles/${encodeURIComponent(vehicleId)}`
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Unable to load selected vehicle."
+            );
+        }
+
+        selectedVehicle =
+            data.vehicle || data;
+
+        console.log(
+            "Selected vehicle:",
+            selectedVehicle
+        );
+
+        displaySelectedVehicle();
+
+    } catch (error) {
+
+        console.error(
+            "Load vehicle error:",
+            error
+        );
+
+        showBookingMessage(
+            error.message ||
+            "Unable to load the selected vehicle."
+        );
+    }
+}
+
+
+// =========================================
+// DISPLAY SELECTED VEHICLE
+// =========================================
+
+function displaySelectedVehicle() {
+
+    if (!selectedVehicle) {
+        return;
+    }
+
+    /*
+        This function supports optional elements.
+
+        If you later add these IDs to booking.html:
+            bookingVehicleName
+            bookingVehiclePrice
+            bookingVehicleSeats
+            bookingVehiclePartner
+
+        they will automatically be populated.
+    */
+
+    const vehicleName =
+        selectedVehicle.vehicleName ||
+        selectedVehicle.name ||
+        "Selected Vehicle";
+
+    const pricePerKm =
+        Number(
+            selectedVehicle.pricePerKm || 0
+        );
+
+    const seatCapacity =
+        Number(
+            selectedVehicle.seatCapacity || 0
+        );
+
+    const partner =
+        selectedVehicle.partner || {};
+
+    const partnerName =
+        `${partner.firstName || ""} ${partner.lastName || ""}`
+            .trim();
+
+
+    setElementText(
+        "bookingVehicleName",
+        vehicleName
+    );
+
+    setElementText(
+        "bookingVehiclePrice",
+        pricePerKm > 0
+            ? `₹${pricePerKm.toLocaleString("en-IN")} / km`
+            : "Price unavailable"
+    );
+
+    setElementText(
+        "bookingVehicleSeats",
+        seatCapacity
+            ? `${seatCapacity} Seats`
+            : ""
+    );
+
+    setElementText(
+        "bookingVehiclePartner",
+        partnerName || "Tripzova Partner"
+    );
+
+
+    // Optional vehicle image
+    const vehicleImage =
+        document.getElementById(
+            "bookingVehicleImage"
+        );
+
+    if (
+        vehicleImage &&
+        Array.isArray(
+            selectedVehicle.vehiclePhotos
+        ) &&
+        selectedVehicle.vehiclePhotos.length
+    ) {
+
+        vehicleImage.src =
+            selectedVehicle.vehiclePhotos[0];
+
+        vehicleImage.style.display =
+            "block";
+    }
+}
+
+
+// =========================================
+// SMALL DOM HELPER
+// =========================================
+
+function setElementText(
+    id,
+    value
+) {
+
+    const element =
+        document.getElementById(id);
+
+    if (element) {
+
+        element.textContent =
+            value || "";
+    }
 }
 
 
@@ -122,11 +327,9 @@ function setupAutocomplete() {
     const dropInput =
         document.getElementById("dropInput");
 
-
     if (!pickupInput || !dropInput) {
         return;
     }
-
 
     pickupAutocomplete =
         new google.maps.places.Autocomplete(
@@ -139,7 +342,6 @@ function setupAutocomplete() {
                 ]
             }
         );
-
 
     dropAutocomplete =
         new google.maps.places.Autocomplete(
@@ -162,7 +364,6 @@ function setupAutocomplete() {
             const place =
                 pickupAutocomplete.getPlace();
 
-
             if (
                 !place ||
                 !place.geometry ||
@@ -176,30 +377,24 @@ function setupAutocomplete() {
                 return;
             }
 
+            pickupPlace =
+                place;
 
-            pickupPlace = place;
-
-
-            document.getElementById(
-                "pickupInput"
-            ).value =
+            pickupInput.value =
                 place.formatted_address ||
                 place.name ||
                 "";
-
 
             updateMarker(
                 "pickup",
                 place.geometry.location
             );
 
-
             map.panTo(
                 place.geometry.location
             );
 
             map.setZoom(14);
-
 
             calculateRoute();
         }
@@ -214,7 +409,6 @@ function setupAutocomplete() {
             const place =
                 dropAutocomplete.getPlace();
 
-
             if (
                 !place ||
                 !place.geometry ||
@@ -228,30 +422,24 @@ function setupAutocomplete() {
                 return;
             }
 
+            dropPlace =
+                place;
 
-            dropPlace = place;
-
-
-            document.getElementById(
-                "dropInput"
-            ).value =
+            dropInput.value =
                 place.formatted_address ||
                 place.name ||
                 "";
-
 
             updateMarker(
                 "drop",
                 place.geometry.location
             );
 
-
             map.panTo(
                 place.geometry.location
             );
 
             map.setZoom(14);
-
 
             calculateRoute();
         }
@@ -275,16 +463,13 @@ function setupLocationMenus() {
             "dropInput"
         );
 
-
     if (pickupInput) {
 
         createLocationMenu(
             pickupInput,
             "pickup"
         );
-
     }
-
 
     if (dropInput) {
 
@@ -292,7 +477,6 @@ function setupLocationMenus() {
             dropInput,
             "drop"
         );
-
     }
 }
 
@@ -310,23 +494,18 @@ function createLocationMenu(
         input.closest(".booking-input") ||
         input.parentElement;
 
-
     if (!wrapper) {
         return;
     }
 
-
     wrapper.style.position =
         "relative";
-
 
     const menu =
         document.createElement("div");
 
-
     menu.className =
         "location-menu";
-
 
     menu.style.cssText = `
         display: none;
@@ -341,7 +520,6 @@ function createLocationMenu(
         padding: 6px;
         box-shadow: 0 10px 30px rgba(0,0,0,.15);
     `;
-
 
     menu.innerHTML = `
 
@@ -444,7 +622,6 @@ function createLocationMenu(
 
     `;
 
-
     wrapper.appendChild(menu);
 
 
@@ -464,7 +641,6 @@ function createLocationMenu(
         openMenu
     );
 
-
     input.addEventListener(
         "focus",
         openMenu
@@ -476,12 +652,10 @@ function createLocationMenu(
         event => {
 
             event.stopPropagation();
-
         }
     );
 
 
-    // Current location
     menu
         .querySelector(
             '[data-action="current"]'
@@ -497,12 +671,10 @@ function createLocationMenu(
                 useCurrentLocation(
                     type
                 );
-
             }
         );
 
 
-    // Select on map
     menu
         .querySelector(
             '[data-action="map"]'
@@ -518,7 +690,6 @@ function createLocationMenu(
                 openMapPicker(
                     type
                 );
-
             }
         );
 }
@@ -538,7 +709,6 @@ function closeAllLocationMenus() {
 
             menu.style.display =
                 "none";
-
         });
 }
 
@@ -555,7 +725,6 @@ document.addEventListener(
             return;
         }
 
-
         if (
             event.target.closest(
                 ".booking-input"
@@ -564,9 +733,7 @@ document.addEventListener(
             return;
         }
 
-
         closeAllLocationMenus();
-
     }
 );
 
@@ -588,7 +755,6 @@ function useCurrentLocation(type) {
         return;
     }
 
-
     navigator.geolocation.getCurrentPosition(
 
         position => {
@@ -603,7 +769,6 @@ function useCurrentLocation(type) {
                     position.coords.longitude
                 );
 
-
             if (
                 !Number.isFinite(lat) ||
                 !Number.isFinite(lng)
@@ -616,19 +781,16 @@ function useCurrentLocation(type) {
                 return;
             }
 
-
             const location =
                 new google.maps.LatLng(
                     lat,
                     lng
                 );
 
-
             reverseGeocode(
                 location,
                 type
             );
-
         },
 
 
@@ -639,11 +801,9 @@ function useCurrentLocation(type) {
                 error
             );
 
-
             alert(
                 "Unable to get your current location. Please allow location access."
             );
-
         },
 
 
@@ -652,7 +812,6 @@ function useCurrentLocation(type) {
             timeout: 15000,
             maximumAge: 0
         }
-
     );
 }
 
@@ -690,20 +849,16 @@ function reverseGeocode(
                 return;
             }
 
-
             const address =
                 results[0]
                     .formatted_address;
-
 
             setLocation(
                 type,
                 location,
                 address
             );
-
         }
-
     );
 }
 
@@ -718,20 +873,8 @@ function setLocation(
     address
 ) {
 
-    /*
-        IMPORTANT:
-        Always convert the location into
-        a real Google LatLng object.
-
-        This prevents:
-        NaN, NaN
-        INVALID_REQUEST
-    */
-
-
     let lat;
     let lng;
-
 
     if (
         location &&
@@ -759,9 +902,7 @@ function setLocation(
             Number(
                 location?.lng
             );
-
     }
-
 
     if (
         !Number.isFinite(lat) ||
@@ -776,13 +917,11 @@ function setLocation(
         return;
     }
 
-
     const latLng =
         new google.maps.LatLng(
             lat,
             lng
         );
-
 
     const place = {
 
@@ -793,9 +932,7 @@ function setLocation(
 
             location:
                 latLng
-
         }
-
     };
 
 
@@ -804,20 +941,16 @@ function setLocation(
         pickupPlace =
             place;
 
-
         const input =
             document.getElementById(
                 "pickupInput"
             );
 
-
         if (input) {
 
             input.value =
                 address;
-
         }
-
 
         updateMarker(
             "pickup",
@@ -829,26 +962,21 @@ function setLocation(
         dropPlace =
             place;
 
-
         const input =
             document.getElementById(
                 "dropInput"
             );
 
-
         if (input) {
 
             input.value =
                 address;
-
         }
-
 
         updateMarker(
             "drop",
             latLng
         );
-
     }
 
 
@@ -856,11 +984,9 @@ function setLocation(
         latLng
     );
 
-
     map.setZoom(
         14
     );
-
 
     calculateRoute();
 }
@@ -882,9 +1008,7 @@ function updateMarker(
             pickupMarker.setMap(
                 null
             );
-
         }
-
 
         pickupMarker =
             new google.maps.Marker({
@@ -895,7 +1019,6 @@ function updateMarker(
 
                 title:
                     "Pickup location"
-
             });
 
     } else {
@@ -905,9 +1028,7 @@ function updateMarker(
             dropMarker.setMap(
                 null
             );
-
         }
-
 
         dropMarker =
             new google.maps.Marker({
@@ -918,9 +1039,7 @@ function updateMarker(
 
                 title:
                     "Drop location"
-
             });
-
     }
 }
 
@@ -934,32 +1053,21 @@ function openMapPicker(type) {
     pickerType =
         type;
 
-
-    // Remove old picker
     const oldPicker =
         document.getElementById(
             "tripzovaMapPicker"
         );
 
-
     if (oldPicker) {
-
         oldPicker.remove();
-
     }
 
-
-    // =====================================
-    // OVERLAY
-    // =====================================
 
     const overlay =
         document.createElement("div");
 
-
     overlay.id =
         "tripzovaMapPicker";
-
 
     overlay.style.cssText = `
         position: fixed;
@@ -971,13 +1079,8 @@ function openMapPicker(type) {
     `;
 
 
-    // =====================================
-    // HEADER
-    // =====================================
-
     const header =
         document.createElement("div");
-
 
     header.style.cssText = `
         height: 68px;
@@ -1036,17 +1139,11 @@ function openMapPicker(type) {
             </small>
 
         </div>
-
     `;
 
 
-    // =====================================
-    // MAP AREA
-    // =====================================
-
     const mapArea =
         document.createElement("div");
-
 
     mapArea.style.cssText = `
         position: relative;
@@ -1058,33 +1155,24 @@ function openMapPicker(type) {
     const pickerMapElement =
         document.createElement("div");
 
-
     pickerMapElement.id =
         "tripzovaPickerMap";
-
 
     pickerMapElement.style.cssText = `
         position:absolute;
         inset:0;
     `;
 
-
     mapArea.appendChild(
         pickerMapElement
     );
 
 
-    // =====================================
-    // FIXED CENTER PIN
-    // =====================================
-
     const centerPin =
         document.createElement("div");
 
-
     centerPin.innerHTML =
         "📍";
-
 
     centerPin.style.cssText = `
         position:absolute;
@@ -1097,31 +1185,22 @@ function openMapPicker(type) {
         filter:drop-shadow(0 3px 4px rgba(0,0,0,.35));
     `;
 
-
     mapArea.appendChild(
         centerPin
     );
 
 
-    // =====================================
-    // GPS BUTTON
-    // =====================================
-
     const gpsButton =
         document.createElement("button");
-
 
     gpsButton.id =
         "pickerGpsButton";
 
-
     gpsButton.type =
         "button";
 
-
     gpsButton.innerHTML =
         "📍";
-
 
     gpsButton.style.cssText = `
         position:absolute;
@@ -1138,19 +1217,13 @@ function openMapPicker(type) {
         cursor:pointer;
     `;
 
-
     mapArea.appendChild(
         gpsButton
     );
 
 
-    // =====================================
-    // BOTTOM
-    // =====================================
-
     const bottom =
         document.createElement("div");
-
 
     bottom.style.cssText = `
         flex-shrink:0;
@@ -1164,14 +1237,11 @@ function openMapPicker(type) {
     const addressBox =
         document.createElement("div");
 
-
     addressBox.id =
         "pickerAddress";
 
-
     addressBox.textContent =
         "Move the map to choose a location";
-
 
     addressBox.style.cssText = `
         background:#f6f7f7;
@@ -1187,18 +1257,14 @@ function openMapPicker(type) {
     const confirmButton =
         document.createElement("button");
 
-
     confirmButton.id =
         "pickerConfirm";
-
 
     confirmButton.type =
         "button";
 
-
     confirmButton.textContent =
         "CONFIRM LOCATION";
-
 
     confirmButton.style.cssText = `
         width:100%;
@@ -1234,16 +1300,12 @@ function openMapPicker(type) {
         bottom
     );
 
-
     document.body.appendChild(
         overlay
     );
 
 
-    // =====================================
-    // STARTING LOCATION
-    // =====================================
-
+    // Starting position
     let startingLocation =
         new google.maps.LatLng(
             21.1702,
@@ -1259,7 +1321,6 @@ function openMapPicker(type) {
 
         startingLocation =
             pickupPlace.geometry.location;
-
     }
 
 
@@ -1271,13 +1332,8 @@ function openMapPicker(type) {
 
         startingLocation =
             dropPlace.geometry.location;
-
     }
 
-
-    // =====================================
-    // CREATE PICKER MAP
-    // =====================================
 
     pickerMap =
         new google.maps.Map(
@@ -1313,10 +1369,6 @@ function openMapPicker(type) {
     );
 
 
-    // =====================================
-    // UPDATE CENTER LOCATION
-    // =====================================
-
     pickerMap.addListener(
         "idle",
         () => {
@@ -1324,18 +1376,12 @@ function openMapPicker(type) {
             pickerLocation =
                 pickerMap.getCenter();
 
-
             updatePickerAddress(
                 pickerLocation
             );
-
         }
     );
 
-
-    // =====================================
-    // CLOSE
-    // =====================================
 
     document
         .getElementById(
@@ -1355,14 +1401,9 @@ function openMapPicker(type) {
 
                 pickerType =
                     null;
-
             }
         );
 
-
-    // =====================================
-    // GPS
-    // =====================================
 
     gpsButton.addEventListener(
         "click",
@@ -1394,7 +1435,6 @@ function openMapPicker(type) {
                             position.coords.latitude,
 
                             position.coords.longitude
-
                         );
 
 
@@ -1402,19 +1442,15 @@ function openMapPicker(type) {
                         location
                     );
 
-
                     pickerMap.setZoom(
                         17
                     );
 
-
                     pickerLocation =
                         location;
 
-
                     gpsButton.textContent =
                         "📍";
-
                 },
 
 
@@ -1424,48 +1460,36 @@ function openMapPicker(type) {
                         error
                     );
 
-
                     gpsButton.textContent =
                         "📍";
-
 
                     alert(
                         "Unable to get your location."
                     );
-
                 },
+
 
                 {
                     enableHighAccuracy:true,
                     timeout:15000,
                     maximumAge:0
                 }
-
             );
-
         }
     );
 
-
-    // =====================================
-    // CONFIRM
-    // =====================================
 
     confirmButton.addEventListener(
         "click",
         () => {
 
-            if (
-                !pickerLocation
-            ) {
-
+            if (!pickerLocation) {
                 return;
             }
 
 
             confirmButton.disabled =
                 true;
-
 
             confirmButton.textContent =
                 "SELECTING...";
@@ -1495,7 +1519,6 @@ function openMapPicker(type) {
                         confirmButton.textContent =
                             "CONFIRM LOCATION";
 
-
                         alert(
                             "Could not find this location."
                         );
@@ -1515,7 +1538,6 @@ function openMapPicker(type) {
                             pickerLocation.lat(),
 
                             pickerLocation.lng()
-
                         );
 
 
@@ -1528,7 +1550,6 @@ function openMapPicker(type) {
 
                     overlay.remove();
 
-
                     pickerMap =
                         null;
 
@@ -1537,11 +1558,8 @@ function openMapPicker(type) {
 
                     pickerType =
                         null;
-
                 }
-
             );
-
         }
     );
 }
@@ -1560,16 +1578,13 @@ function updatePickerAddress(
             "pickerAddress"
         );
 
-
     if (
         !addressElement ||
         !pickerGeocoder ||
         !location
     ) {
-
         return;
     }
-
 
     addressElement.textContent =
         "Finding address...";
@@ -1600,11 +1615,8 @@ function updatePickerAddress(
 
                 addressElement.textContent =
                     "Move the map to choose a location";
-
             }
-
         }
-
     );
 }
 
@@ -1624,6 +1636,8 @@ function calculateRoute() {
             "Waiting for both pickup and drop locations..."
         );
 
+        routeDistanceKm = 0;
+
         return;
     }
 
@@ -1633,53 +1647,31 @@ function calculateRoute() {
             .geometry
             .location;
 
-
     const destination =
         dropPlace
             .geometry
             .location;
 
 
-    // =====================================
-    // VALIDATE COORDINATES
-    // =====================================
-
     const originLat =
         typeof origin.lat === "function"
             ? origin.lat()
             : Number(origin.lat);
-
 
     const originLng =
         typeof origin.lng === "function"
             ? origin.lng()
             : Number(origin.lng);
 
-
     const destinationLat =
         typeof destination.lat === "function"
             ? destination.lat()
             : Number(destination.lat);
 
-
     const destinationLng =
         typeof destination.lng === "function"
             ? destination.lng()
             : Number(destination.lng);
-
-
-    console.log(
-        "Pickup:",
-        originLat,
-        originLng
-    );
-
-
-    console.log(
-        "Drop:",
-        destinationLat,
-        destinationLng
-    );
 
 
     if (
@@ -1695,11 +1687,6 @@ function calculateRoute() {
 
         return;
     }
-
-
-    console.log(
-        "Calculating route..."
-    );
 
 
     directionsService.route(
@@ -1741,13 +1728,14 @@ function calculateRoute() {
                     status
                 );
 
+                routeDistanceKm = 0;
+
                 hideRouteInfo();
 
                 return;
             }
 
 
-            // Draw route
             directionsRenderer.setDirections(
                 result
             );
@@ -1783,11 +1771,39 @@ function calculateRoute() {
                     : "—";
 
 
+            // =====================================
+            // SAVE NUMERIC DISTANCE
+            // Google returns metres
+            // =====================================
+
+            if (
+                leg.distance &&
+                Number.isFinite(
+                    Number(leg.distance.value)
+                )
+            ) {
+
+                routeDistanceKm =
+                    Number(
+                        leg.distance.value
+                    ) / 1000;
+
+            } else {
+
+                routeDistanceKm =
+                    0;
+            }
+
+
             console.log(
                 "Distance:",
                 distance
             );
 
+            console.log(
+                "Distance KM:",
+                routeDistanceKm
+            );
 
             console.log(
                 "Duration:",
@@ -1800,9 +1816,85 @@ function calculateRoute() {
                 duration
             );
 
-        }
 
+            // Update optional fare display
+            updateEstimatedFare();
+        }
     );
+}
+
+
+// =========================================
+// ESTIMATED FARE
+// =========================================
+
+function updateEstimatedFare() {
+
+    if (!selectedVehicle) {
+        return;
+    }
+
+    if (!routeDistanceKm) {
+        return;
+    }
+
+
+    const pricePerKm =
+        Number(
+            selectedVehicle.pricePerKm || 0
+        );
+
+    const minimumKm =
+        Number(
+            selectedVehicle.minimumKm || 0
+        );
+
+
+    if (
+        pricePerKm <= 0
+    ) {
+        return;
+    }
+
+
+    const chargeableKm =
+        Math.max(
+            routeDistanceKm,
+            minimumKm
+        );
+
+
+    let estimatedAmount =
+        chargeableKm *
+        pricePerKm;
+
+
+    // Round trip
+    const tripType =
+        getTripType();
+
+
+    if (
+        tripType === "round_trip"
+    ) {
+
+        estimatedAmount *= 2;
+    }
+
+
+    const amountElement =
+        document.getElementById(
+            "bookingEstimatedAmount"
+        );
+
+
+    if (amountElement) {
+
+        amountElement.textContent =
+            `₹${Math.round(
+                estimatedAmount
+            ).toLocaleString("en-IN")}`;
+    }
 }
 
 
@@ -1820,7 +1912,6 @@ function showRouteInfo(
             "routeInfo"
         );
 
-
     if (!routeInfo) {
         return;
     }
@@ -1830,7 +1921,6 @@ function showRouteInfo(
         document.getElementById(
             "routeDistance"
         );
-
 
     const timeElement =
         document.getElementById(
@@ -1846,18 +1936,16 @@ function showRouteInfo(
         distanceElement.textContent =
             distance;
 
-
         timeElement.textContent =
             " • " + duration;
 
     } else {
 
         routeInfo.innerHTML = `
-            <strong>${distance}</strong>
+            <strong>${escapeHTML(distance)}</strong>
             <span> • </span>
-            ${duration}
+            ${escapeHTML(duration)}
         `;
-
     }
 
 
@@ -1874,13 +1962,11 @@ function hideRouteInfo() {
             "routeInfo"
         );
 
-
     if (routeInfo) {
 
         routeInfo.classList.remove(
             "active"
         );
-
     }
 }
 
@@ -1889,6 +1975,10 @@ function hideRouteInfo() {
 // TRIP TYPE
 // =========================================
 
+let currentTripType =
+    "one_way";
+
+
 function setupTripType() {
 
     const roundTripBtn =
@@ -1896,12 +1986,10 @@ function setupTripType() {
             "roundTripBtn"
         );
 
-
     const oneWayBtn =
         document.getElementById(
             "oneWayBtn"
         );
-
 
     const returnDateField =
         document.getElementById(
@@ -1913,7 +2001,6 @@ function setupTripType() {
         !roundTripBtn ||
         !oneWayBtn
     ) {
-
         return;
     }
 
@@ -1921,6 +2008,9 @@ function setupTripType() {
     roundTripBtn.addEventListener(
         "click",
         () => {
+
+            currentTripType =
+                "round_trip";
 
             roundTripBtn.classList.add(
                 "active"
@@ -1935,9 +2025,10 @@ function setupTripType() {
 
                 returnDateField.style.display =
                     "";
-
             }
 
+
+            updateEstimatedFare();
         }
     );
 
@@ -1945,6 +2036,9 @@ function setupTripType() {
     oneWayBtn.addEventListener(
         "click",
         () => {
+
+            currentTripType =
+                "one_way";
 
             oneWayBtn.classList.add(
                 "active"
@@ -1959,11 +2053,22 @@ function setupTripType() {
 
                 returnDateField.style.display =
                     "none";
-
             }
 
+
+            updateEstimatedFare();
         }
     );
+}
+
+
+// =========================================
+// GET TRIP TYPE
+// =========================================
+
+function getTripType() {
+
+    return currentTripType;
 }
 
 
@@ -1982,24 +2087,20 @@ function setupPassengers() {
             "passengerButton"
         );
 
-
     const passengerMenu =
         document.getElementById(
             "passengerMenu"
         );
-
 
     const passengerText =
         document.getElementById(
             "passengerText"
         );
 
-
     const adultCount =
         document.getElementById(
             "adultCount"
         );
-
 
     const kidCount =
         document.getElementById(
@@ -2015,28 +2116,20 @@ function setupPassengers() {
     function updatePassengers() {
 
         if (adultCount) {
-
             adultCount.textContent =
                 adults;
-
         }
-
 
         if (kidCount) {
-
             kidCount.textContent =
                 kids;
-
         }
-
 
         if (passengerText) {
 
             passengerText.textContent =
                 `${adults} Adult${adults !== 1 ? "s" : ""}, ${kids} Kid${kids !== 1 ? "s" : ""}`;
-
         }
-
     }
 
 
@@ -2046,15 +2139,12 @@ function setupPassengers() {
 
             event.stopPropagation();
 
-
             if (passengerMenu) {
 
                 passengerMenu.classList.toggle(
                     "show"
                 );
-
             }
-
         }
     );
 
@@ -2071,6 +2161,7 @@ function setupPassengers() {
 
                 updatePassengers();
 
+                updateEstimatedFare();
             }
         );
 
@@ -2088,9 +2179,7 @@ function setupPassengers() {
                     adults--;
 
                     updatePassengers();
-
                 }
-
             }
         );
 
@@ -2106,7 +2195,6 @@ function setupPassengers() {
                 kids++;
 
                 updatePassengers();
-
             }
         );
 
@@ -2124,14 +2212,32 @@ function setupPassengers() {
                     kids--;
 
                     updatePassengers();
-
                 }
-
             }
         );
 
 
     updatePassengers();
+
+
+    // Pre-fill members from vehicle-list URL
+    if (
+        Number.isFinite(
+            membersParam
+        ) &&
+        membersParam > 0
+    ) {
+
+        adults =
+            Math.max(
+                1,
+                membersParam
+            );
+
+        kids = 0;
+
+        updatePassengers();
+    }
 }
 
 
@@ -2145,7 +2251,6 @@ function setupDates() {
         document.getElementById(
             "journeyDate"
         );
-
 
     const returnDate =
         document.getElementById(
@@ -2165,17 +2270,21 @@ function setupDates() {
     const yyyy =
         today.getFullYear();
 
-
     const mm =
         String(
             today.getMonth() + 1
-        ).padStart(2, "0");
-
+        ).padStart(
+            2,
+            "0"
+        );
 
     const dd =
         String(
             today.getDate()
-        ).padStart(2, "0");
+        ).padStart(
+            2,
+            "0"
+        );
 
 
     const todayString =
@@ -2186,9 +2295,17 @@ function setupDates() {
         todayString;
 
 
+    // Pre-fill selected travel date
     if (
-        returnDate
+        travelDateParam
     ) {
+
+        journeyDate.value =
+            travelDateParam;
+    }
+
+
+    if (returnDate) {
 
         returnDate.min =
             todayString;
@@ -2201,9 +2318,55 @@ function setupDates() {
                 returnDate.min =
                     journeyDate.value;
 
+                if (
+                    returnDate.value &&
+                    returnDate.value <
+                    journeyDate.value
+                ) {
+
+                    returnDate.value =
+                        journeyDate.value;
+                }
             }
         );
+    }
+}
 
+
+// =========================================
+// PREFILL LOCATIONS
+// =========================================
+
+function prefillLocations() {
+
+    const pickupInput =
+        document.getElementById(
+            "pickupInput"
+        );
+
+    const dropInput =
+        document.getElementById(
+            "dropInput"
+        );
+
+
+    if (
+        pickupInput &&
+        pickupParam
+    ) {
+
+        pickupInput.value =
+            pickupParam;
+    }
+
+
+    if (
+        dropInput &&
+        dropParam
+    ) {
+
+        dropInput.value =
+            dropParam;
     }
 }
 
@@ -2219,13 +2382,6 @@ function setupBookingButton() {
             "bookRideButton"
         );
 
-
-    const message =
-        document.getElementById(
-            "bookingMessage"
-        );
-
-
     if (!bookButton) {
         return;
     }
@@ -2233,73 +2389,635 @@ function setupBookingButton() {
 
     bookButton.addEventListener(
         "click",
-        () => {
-
-            const pickupTime = document.getElementById("pickupTime");
-
-            if (!pickupTime.value) {
-                bookingMessage.textContent = "Please select a pickup time.";
-                bookingMessage.className = "booking-message error";
-                pickupTime.focus();
-                return;
-            }
-
-            const pickup =
-                document.getElementById(
-                    "pickupInput"
-                )?.value.trim();
-
-
-            const drop =
-                document.getElementById(
-                    "dropInput"
-                )?.value.trim();
-
-
-            const date =
-                document.getElementById(
-                    "journeyDate"
-                )?.value;
-
-
-            if (!pickup) {
-
-                showBookingMessage(
-                    "Please select a pickup location."
-                );
-
-                return;
-            }
-
-
-            if (!drop) {
-
-                showBookingMessage(
-                    "Please select a drop location."
-                );
-
-                return;
-            }
-
-
-            if (!date) {
-
-                showBookingMessage(
-                    "Please select your journey date."
-                );
-
-                return;
-            }
-
-
-            showBookingMessage(
-                "Your ride details are ready to book."
-            );
-
-        }
+        createBooking
     );
 }
 
+
+// =========================================
+// CREATE BOOKING
+// =========================================
+
+async function createBooking() {
+
+    const bookButton =
+        document.getElementById(
+            "bookRideButton"
+        );
+
+    const pickupTime =
+        document.getElementById(
+            "pickupTime"
+        );
+
+    const pickupInput =
+        document.getElementById(
+            "pickupInput"
+        );
+
+    const dropInput =
+        document.getElementById(
+            "dropInput"
+        );
+
+    const journeyDate =
+        document.getElementById(
+            "journeyDate"
+        );
+
+    const returnDate =
+        document.getElementById(
+            "returnDate"
+        );
+
+    const flightNumber =
+        document.getElementById(
+            "flightNumber"
+        );
+
+
+    // =====================================
+    // LOGIN
+    // =====================================
+
+    const token =
+        localStorage.getItem(
+            "tripzovaToken"
+        );
+
+
+    if (!token) {
+
+        const returnTo =
+            encodeURIComponent(
+                window.location.pathname +
+                window.location.search
+            );
+
+        window.location.href =
+            `login.html?redirect=${returnTo}`;
+
+        return;
+    }
+
+
+    // =====================================
+    // VEHICLE
+    // =====================================
+
+    if (!vehicleId) {
+
+        showBookingMessage(
+            "No vehicle was selected. Please select a vehicle first."
+        );
+
+        return;
+    }
+
+
+    if (!selectedVehicle) {
+
+        showBookingMessage(
+            "Vehicle details are still loading. Please try again."
+        );
+
+        return;
+    }
+
+
+    // =====================================
+    // PICKUP
+    // =====================================
+
+    const pickup =
+        pickupInput
+            ?.value
+            .trim();
+
+
+    if (!pickup) {
+
+        showBookingMessage(
+            "Please select a pickup location."
+        );
+
+        pickupInput?.focus();
+
+        return;
+    }
+
+
+    // =====================================
+    // DROP
+    // =====================================
+
+    const drop =
+        dropInput
+            ?.value
+            .trim();
+
+
+    if (!drop) {
+
+        showBookingMessage(
+            "Please select a drop location."
+        );
+
+        dropInput?.focus();
+
+        return;
+    }
+
+
+    // =====================================
+    // DATE
+    // =====================================
+
+    const date =
+        journeyDate
+            ?.value;
+
+
+    if (!date) {
+
+        showBookingMessage(
+            "Please select your journey date."
+        );
+
+        journeyDate?.focus();
+
+        return;
+    }
+
+
+    // =====================================
+    // PICKUP TIME
+    // =====================================
+
+    if (
+        !pickupTime ||
+        !pickupTime.value
+    ) {
+
+        showBookingMessage(
+            "Please select a pickup time."
+        );
+
+        pickupTime?.focus();
+
+        return;
+    }
+
+
+    // =====================================
+    // ROUND TRIP RETURN DATE
+    // =====================================
+
+    const tripType =
+        getTripType();
+
+
+    if (
+        tripType === "round_trip"
+    ) {
+
+        if (
+            !returnDate ||
+            !returnDate.value
+        ) {
+
+            showBookingMessage(
+                "Please select your return date."
+            );
+
+            returnDate?.focus();
+
+            return;
+        }
+
+
+        if (
+            returnDate.value <
+            date
+        ) {
+
+            showBookingMessage(
+                "Return date cannot be before the journey date."
+            );
+
+            returnDate?.focus();
+
+            return;
+        }
+    }
+
+
+    // =====================================
+    // ROUTE
+    // =====================================
+
+    if (
+        !pickupPlace ||
+        !dropPlace
+    ) {
+
+        showBookingMessage(
+            "Please select valid pickup and drop locations from the map suggestions."
+        );
+
+        return;
+    }
+
+
+    if (
+        !routeDistanceKm ||
+        routeDistanceKm <= 0
+    ) {
+
+        showBookingMessage(
+            "Please wait for the route distance to be calculated."
+        );
+
+        calculateRoute();
+
+        return;
+    }
+
+
+    // =====================================
+    // CAPACITY
+    // =====================================
+
+    const totalGuests =
+        adults + kids;
+
+
+    const seatCapacity =
+        Number(
+            selectedVehicle.seatCapacity || 0
+        );
+
+
+    if (
+        seatCapacity > 0 &&
+        totalGuests > seatCapacity
+    ) {
+
+        showBookingMessage(
+            `This vehicle can accommodate only ${seatCapacity} passengers.`
+        );
+
+        return;
+    }
+
+
+    // =====================================
+    // PARTNER
+    // =====================================
+
+    const partner =
+        selectedVehicle.partner;
+
+
+    const partnerId =
+        typeof partner === "object"
+            ? partner?._id
+            : partner;
+
+
+    if (!partnerId) {
+
+        showBookingMessage(
+            "This vehicle does not have a valid partner."
+        );
+
+        return;
+    }
+
+
+    // =====================================
+    // ESTIMATE AMOUNT
+    // =====================================
+
+    const pricePerKm =
+        Number(
+            selectedVehicle.pricePerKm || 0
+        );
+
+    const minimumKm =
+        Number(
+            selectedVehicle.minimumKm || 0
+        );
+
+
+    const chargeableKm =
+        Math.max(
+            routeDistanceKm,
+            minimumKm
+        );
+
+
+    let amount =
+        chargeableKm *
+        pricePerKm;
+
+
+    if (
+        tripType === "round_trip"
+    ) {
+
+        amount *= 2;
+    }
+
+
+    amount =
+        Math.round(
+            amount
+        );
+
+
+    // =====================================
+    // NOTES
+    // =====================================
+
+    const notes =
+        [
+            destinationParam
+                ? `Destination: ${destinationParam}`
+                : "",
+
+            drop
+                ? `Drop: ${drop}`
+                : ""
+        ]
+            .filter(Boolean)
+            .join(" | ");
+
+
+    // =====================================
+    // REQUEST BODY
+    // =====================================
+
+    const bookingData = {
+
+        partner:
+            partnerId,
+
+        vehicle:
+            selectedVehicle._id ||
+            vehicleId,
+
+        serviceType:
+            "ride",
+
+        serviceName:
+            selectedVehicle.vehicleName ||
+            "Ride",
+
+        pickup,
+
+        drop,
+
+        travelDate:
+            date,
+
+        returnDate:
+            tripType === "round_trip"
+                ? returnDate.value
+                : null,
+
+        tripType,
+
+        pickupTime:
+            pickupTime.value,
+
+        flightNumber:
+            flightNumber
+                ? flightNumber.value.trim()
+                : "",
+
+        distanceKm:
+            Number(
+                routeDistanceKm.toFixed(2)
+            ),
+
+        guests:
+            totalGuests,
+
+        amount,
+
+        paymentMethod:
+            "pending",
+
+        notes
+    };
+
+
+    console.log(
+        "Creating booking:",
+        bookingData
+    );
+
+
+    // =====================================
+    // BUTTON LOADING
+    // =====================================
+
+    if (bookButton) {
+
+        bookButton.disabled =
+            true;
+
+        bookButton.dataset.originalText =
+            bookButton.textContent;
+
+        bookButton.textContent =
+            "CREATING BOOKING...";
+    }
+
+
+    clearBookingMessage();
+
+
+    // =====================================
+    // API REQUEST
+    // =====================================
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/bookings",
+                {
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${token}`
+                    },
+
+                    body:
+                        JSON.stringify(
+                            bookingData
+                        )
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.message ||
+                "Unable to create booking."
+            );
+        }
+
+
+        console.log(
+            "Booking created:",
+            data
+        );
+
+
+        // =================================
+        // SUCCESS
+        // =================================
+
+        const booking =
+            data.booking || {};
+
+
+        const bookingNumber =
+            booking.bookingNumber ||
+            "";
+
+
+        showBookingSuccess(
+            bookingNumber
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Create booking error:",
+            error
+        );
+
+
+        showBookingMessage(
+            error.message ||
+            "Unable to create booking. Please try again."
+        );
+
+
+        if (bookButton) {
+
+            bookButton.disabled =
+                false;
+
+            bookButton.textContent =
+                bookButton.dataset.originalText ||
+                "BOOK YOUR RIDE";
+        }
+    }
+}
+
+
+// =========================================
+// BOOKING SUCCESS
+// =========================================
+
+function showBookingSuccess(
+    bookingNumber
+) {
+
+    const message =
+        document.getElementById(
+            "bookingMessage"
+        );
+
+
+    if (!message) {
+        return;
+    }
+
+
+    message.className =
+        "booking-message success";
+
+
+    message.innerHTML = `
+
+        <strong>
+            Booking request created successfully!
+        </strong>
+
+        ${
+            bookingNumber
+                ? `
+                    <br>
+                    <span>
+                        Booking Number:
+                        <strong>
+                            ${escapeHTML(bookingNumber)}
+                        </strong>
+                    </span>
+                  `
+                : ""
+        }
+
+        <br>
+
+        <span>
+            Your selected partner will review your request.
+        </span>
+
+    `;
+
+
+    message.classList.add(
+        "active"
+    );
+
+
+    const bookButton =
+        document.getElementById(
+            "bookRideButton"
+        );
+
+
+    if (bookButton) {
+
+        bookButton.disabled =
+            true;
+
+        bookButton.textContent =
+            "BOOKING CREATED";
+    }
+
+
+    // Optional redirect if a customer bookings
+    // page exists.
+    /*
+    setTimeout(() => {
+        window.location.href = "my-bookings.html";
+    }, 2500);
+    */
+}
+
+
+// =========================================
+// BOOKING MESSAGE
+// =========================================
 
 function showBookingMessage(
     text
@@ -2320,17 +3038,96 @@ function showBookingMessage(
         text;
 
 
+    message.className =
+        "booking-message error";
+
+
     message.classList.add(
         "active"
     );
 }
 
-/* =========================================
-   LOGIN PROTECTION
-========================================= */
 
-const token = localStorage.getItem("tripzovaToken");
+function clearBookingMessage() {
+
+    const message =
+        document.getElementById(
+            "bookingMessage"
+        );
+
+
+    if (!message) {
+        return;
+    }
+
+
+    message.textContent =
+        "";
+
+    message.className =
+        "booking-message";
+}
+
+
+// =========================================
+// HTML ESCAPE
+// =========================================
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+}
+
+
+// =========================================
+// PREFILL PAGE DATA
+// =========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        prefillLocations();
+
+    }
+);
+
+
+// =========================================
+// LOGIN PROTECTION
+// =========================================
+
+const token =
+    localStorage.getItem(
+        "tripzovaToken"
+    );
 
 if (!token) {
-    window.location.href = "login.html";
+
+    window.location.href =
+        "login.html";
 }

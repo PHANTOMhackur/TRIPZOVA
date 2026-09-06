@@ -35,7 +35,28 @@
         const token = getPartnerToken();
 
         if (!token) {
-            window.location.href = "../login.html";
+
+            const returnTo = encodeURIComponent(
+                window.location.pathname + window.location.search
+            );
+
+            window.location.href = `../login.html?redirect=${returnTo}`;
+            return false;
+        }
+
+        // UX guard only - the real check happens server-side via
+        // partnerMiddleware on every /api/partners/* request, so a
+        // non-partner account can't actually pull partner data even
+        // if this client-side check were bypassed.
+        const user = getStoredUser();
+
+        if (user && user.role === "admin") {
+            window.location.href = "/admin/";
+            return false;
+        }
+
+        if (user && user.role && user.role !== "partner") {
+            window.location.href = "/user/";
             return false;
         }
 

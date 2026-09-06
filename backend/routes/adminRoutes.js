@@ -14,7 +14,12 @@ const {
     updateUserStatus,
     getBookings,
     getBookingById,
-    updateBookingStatus
+    updateBookingStatus,
+    getVehicles,
+    getVehicleById,
+    approveVehicle,
+    rejectVehicle,
+    setVehicleStatus
 } = require("../controllers/adminController");
 
 
@@ -109,6 +114,35 @@ router.get(
 router.put(
     "/bookings/:id/status",
     updateBookingStatus
+);
+
+// =========================================
+// VEHICLES
+// =========================================
+
+router.get(
+    "/vehicles",
+    getVehicles
+);
+
+router.get(
+    "/vehicles/:id",
+    getVehicleById
+);
+
+router.put(
+    "/vehicles/:id/approve",
+    approveVehicle
+);
+
+router.put(
+    "/vehicles/:id/reject",
+    rejectVehicle
+);
+
+router.put(
+    "/vehicles/:id/status",
+    setVehicleStatus
 );
 
 module.exports = router;

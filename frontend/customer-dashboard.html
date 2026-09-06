@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Bookings | TRIPZOVA</title>
+
+    <link rel="stylesheet" href="customer-dashboard.css">
+</head>
+
+<body>
+
+    <header class="dash-topbar">
+
+        <a href="/user/" class="dash-logo">
+            TRIPZOVA
+        </a>
+
+        <div class="dash-topbar-actions">
+
+            <a href="/user/" class="dash-back-link">
+                ← Back to home
+            </a>
+
+            <button
+                type="button"
+                id="dashLogoutBtn"
+                class="dash-logout-btn"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="dash-page">
+
+        <h1 class="dash-greeting" id="dashGreeting">
+            Welcome back
+        </h1>
+
+        <p class="dash-subtitle">
+            Here's an overview of your TRIPZOVA bookings.
+        </p>
+
+
+        <!-- STATS -->
+
+        <section class="dash-stats">
+
+            <div class="dash-stat-card">
+                <div class="dash-stat-value" id="dashStatTotal">0</div>
+                <div class="dash-stat-label">Total bookings</div>
+            </div>
+
+            <div class="dash-stat-card">
+                <div class="dash-stat-value" id="dashStatUpcoming">0</div>
+                <div class="dash-stat-label">Upcoming trips</div>
+            </div>
+
+            <div class="dash-stat-card">
+                <div class="dash-stat-value" id="dashStatCompleted">0</div>
+                <div class="dash-stat-label">Completed trips</div>
+            </div>
+
+        </section>
+
+
+        <!-- BOOKINGS -->
+
+        <section>
+
+            <div class="dash-section-header">
+
+                <h2>My Bookings</h2>
+
+                <a href="/user/#searchWidget" class="dash-new-booking-btn">
+                    + New Booking
+                </a>
+
+            </div>
+
+
+            <div id="dashLoading" class="dash-loading">
+                Loading your bookings...
+            </div>
+
+            <div id="dashError" class="dash-error" style="display:none;"></div>
+
+            <div id="dashEmpty" class="dash-empty" style="display:none;">
+                You haven't made any bookings yet.
+                <br><br>
+                <a href="/user/#searchWidget" class="dash-new-booking-btn">
+                    Search Vehicles
+                </a>
+            </div>
+
+            <div id="dashBookingsList" class="dash-bookings-list"></div>
+
+        </section>
+
+    </main>
+
+
+    <script src="customer-dashboard.js"></script>
+
+</body>
+
+</html>

@@ -275,7 +275,9 @@ const loginUser = async (req, res) => {
 
         if (
             !email ||
-            !password
+            !password ||
+            typeof email !== "string" ||
+            typeof password !== "string"
         ) {
 
             return res.status(400).json({

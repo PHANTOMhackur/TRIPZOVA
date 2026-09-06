@@ -231,7 +231,7 @@
 
         const container =
             document.getElementById(
-                "partnerVehiclesContainer"
+                "dashboardVehicles"
             );
 
         if (!container) {
